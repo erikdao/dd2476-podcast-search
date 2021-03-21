@@ -34,8 +34,25 @@ services:
     networks:
         - elastic
 
+  postgres:
+    image: postgres:12-alpine
+    container_name: postgres
+    ports:
+        - 5432:5432
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=podcast
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+    networks:
+        - elastic
+
 volumes:
   data:
+    driver: local
+
+  pgdata:
     driver: local
 
 networks:

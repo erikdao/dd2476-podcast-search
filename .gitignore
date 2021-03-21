@@ -4,3 +4,7 @@
 # data
 data/
 !data/.gitkeep
+
+# env file
+.env
+env/
