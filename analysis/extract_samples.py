@@ -6,6 +6,8 @@ import os
 import os.path as osp
 import typing
 import logging
+import shutil
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -16,6 +18,8 @@ logger.addHandler(sh)
 ROOT_DIR = osp.dirname(osp.dirname(osp.realpath(__file__)))
 
 DATA_DIR = "data/podcasts-transcript/spotify-podcasts-2020"
+
+TRANSCRIPTS_DIR = os.path.join(ROOT_DIR, DATA_DIR, 'podcasts-transcripts')
 
 SHOW_IDS = [
     "spotify:show:2Vh5jVI1EdMDeHs3N8XoME",
@@ -48,7 +52,7 @@ def extract_sample_metadata() -> None:
     sample_mfile = osp.join(ROOT_DIR, 'data', 'metadata_samples.tsv')
     
     orig_f = open(m_file, 'r')
-    sample_f = open(sample_mfile, 'a')
+    sample_f = open(sample_mfile, 'w')
 
     header_line = next(orig_f)
     sample_f.write(header_line) 
@@ -67,5 +71,41 @@ def extract_sample_metadata() -> None:
     sample_f.close()
     
 
+def extract_sample_json_files() -> None:
+    """
+    """
+    # Get only the show id
+    show_idx = [sid.replace('spotify:show:', '') for sid in SHOW_IDS]
+
+    # Build a list of absolute paths of all the json transcript files
+    json_files = []
+    for root, d_names, f_names in os.walk(TRANSCRIPTS_DIR):
+        for fn in f_names:
+            json_files.append(os.path.join(root, fn))
+
+    logger.debug(f'Got {len(json_files)} JSON transcript files')
+
+    # For each show in `show_idx`, collect the corresponding transcript files
+    show_json_files = []
+    for s_id in show_idx:
+        show_json_files.extend([jsf for jsf in json_files if s_id in jsf])
+
+    logger.debug(f'After filtered, got {len(show_json_files)} JSON transcript files')
+
+    for tjson_f in tqdm(show_json_files):
+        # Get the show taxonomy path
+        path = tjson_f.replace(f'{TRANSCRIPTS_DIR}/', '')  # Remove the prefix abs path
+        path_comps = path.split('/')
+        json_fname = path_comps[-1]
+        path_comps = path_comps[0:len(path_comps)-1]
+
+        dir_path = os.path.join(ROOT_DIR, 'data', 'podcasts-transcripts-samples', *path_comps)
+        if not os.path.isdir(dir_path):
+            os.makedirs(dir_path)
+
+        shutil.copyfile(tjson_f, os.path.join(dir_path, json_fname))
+
 if __name__ == '__main__':
     extract_sample_metadata()
+    extract_sample_json_files()
+
