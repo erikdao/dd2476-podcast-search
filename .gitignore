@@ -12,3 +12,7 @@ data/podcasts-transcript
 # env file
 .env
 env/
+
+# front end files
+client/node_modules
+
