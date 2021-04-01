@@ -20,6 +20,7 @@ poetry run python metadata.py -f ${DATA_DIR}
 echo "Finished."
 
 echo "Creating Elasticsearch indexes"
+poetry run python index.py
 
 echo "Done."
 
