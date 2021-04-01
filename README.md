@@ -40,3 +40,6 @@ The current preprocess script read the shows and episodes **metadata** from a `.
 docker-compose up -d
 cd preprocess && ./preprocess.sh
 ```
+
+If everything work properly, your console/shell screen should look like below
+![Preprocess Screenshot](./docs/images/preprocess_screenshot.png)
