@@ -4,16 +4,19 @@ set -eux
 set -o pipefail
 set -o errexit
 
+echo "Install Python packages"
+
+poetry install
+
 WORKING_DIR=./preprocess
 
 pushd ${WORKING_DIR}
 
 echo "Setting up database and load metadata"
 
-poetry install
 
-# DATA_DIR=data/metadata_samples.tsv
-DATA_DIR="data/podcasts-transcript/spotify-podcasts-2020/metadata.tsv"
+DATA_DIR=data/metadata_samples.tsv
+# DATA_DIR="data/podcasts-transcript/spotify-podcasts-2020/metadata.tsv"
 
 poetry run python metadata.py -f ${DATA_DIR}
 

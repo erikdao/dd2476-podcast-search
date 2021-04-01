@@ -32,3 +32,11 @@ Starting kibana        ... done
 **Poetry**:
 Poetry is a package and virtual environment management tool for Python. It helps isolate the python environment for this project (i.e., the one inside the `analysis` directory) from potential conflicts with whatever python is currently installed in your system.
 - Follow the official installation instructions [here](https://python-poetry.org/docs/#installation) to get it setup.
+
+## Preprocess
+
+The current preprocess script read the shows and episodes **metadata** from a `.tsv` file and put them into the PostgreSQL database as well as Elasticsearch index for further analysis and manipulation. To run the preprocessing script, make sure you complete setting up Docker and poetry, then run
+```shell
+docker-compose up -d
+cd preprocess && ./preprocess.sh
+```

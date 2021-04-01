@@ -45,7 +45,7 @@ def line_to_metadata_dict(parts: typing.List[str]) -> typing.Optional[dict]:
         'show_name': parts[1],
         'show_description': parts[2],
         'publisher': parts[3],
-        'language': parts[4].replace("'[", "").replace("]'", ""),
+        'language': parts[4].replace("['", "").replace("']", ""),
         'rss_link': parts[5],
         'episode_uri': parts[6],
         'episode_name': parts[7],

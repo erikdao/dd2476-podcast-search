@@ -12,3 +12,5 @@ data/podcasts-transcript
 # env file
 .env
 env/
+
+.ipynb_checkpoints/

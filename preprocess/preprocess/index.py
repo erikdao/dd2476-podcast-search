@@ -54,7 +54,7 @@ def index_show():
 
         count += 1
 
-        if count % 1000 == 0:
+        if count % 2000 == 0:
             helpers.bulk(client, data)
             data = []
             logger.info(f"Indexed {count} shows to ES")
@@ -104,7 +104,7 @@ def index_episodes():
         })
 
         count += 1
-        if count % 1000 == 0:
+        if count % 20000 == 0:
             helpers.bulk(client, data)
             data = []
             logger.info(f"Indexed {count} episodes to ES")
