@@ -17,7 +17,6 @@ class BaseModel(Model):
 class Metadata(BaseModel):
     """Big model, direct representation on DB for the `metadata` tsv file"""
 
-    id = IntegerField(primary_key=True)
     show_uri = CharField(max_length=50)
     show_name = CharField(max_length=255)
     show_description = TextField()
@@ -33,6 +32,9 @@ class Metadata(BaseModel):
 
     class Meta:
         table_name = 'metadata'
+        indexes = (
+            (('show_uri', 'episode_uri'), True),
+        )
 
 
 class Show(BaseModel):
