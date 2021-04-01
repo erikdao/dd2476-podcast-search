@@ -14,3 +14,7 @@ data/podcasts-transcript
 env/
 
 .ipynb_checkpoints/
+
+# front end files
+client/node_modules
+
