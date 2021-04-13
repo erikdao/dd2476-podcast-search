@@ -23,7 +23,6 @@ client/node_modules
 
 
 ## From Spring-boot
-HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
