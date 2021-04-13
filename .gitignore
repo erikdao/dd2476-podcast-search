@@ -23,6 +23,10 @@ client/node_modules
 
 
 ## From Spring-boot
+.gradle
+**/build/
+**/bin/
+!src/**/build/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
