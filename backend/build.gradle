@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "com.moowork.node" version "1.3.1"
 }
 
 group = 'dd2476.group18'
@@ -16,6 +17,58 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+// Used to connect node plugin to compile frontend to a servable file.
+node {
+    // Version of node to use.
+    version = '12.14.1'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+	//distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = false
+
+    // Set the work directory for unpacking node
+    workDir = file("${project.projectDir}/client/nodejs")
+
+    // Set the work directory for NPM
+    npmWorkDir = file("${project.projectDir}/client/npm")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}/client")
+}
+// Connect copyFrontendToBuild task to run before processResources task
+processResources{
+    dependsOn 'copyFrontendToBuild'
+}
+
+// Copy frontend build to right folder to be served, task runs before after npmBuild
+task copyFrontendToBuild(type: Copy) {
+    dependsOn 'npmBuild'
+    from "$projectDir/client/build/"
+    into "$buildDir/resources/main/static"
+}
+
+// Builds frontend, task runs before after npminstall2
+task npmBuild(type: NpmTask) {
+    dependsOn 'npmInstall2'
+    execOverrides {
+        it.workingDir = 'client'
+    }
+    args = ['run', 'build']
+}
+
+// Install frontend dependencies in package.json, task runs before after npmSetup
+task npmInstall2(type: NpmTask) {
+    dependsOn 'npmSetup'
+    execOverrides {
+        it.ignoreExitValue = true
+        it.workingDir = 'client'
+    }
+    args = ['install']
 }
 
 dependencies {
@@ -33,3 +86,6 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+
+

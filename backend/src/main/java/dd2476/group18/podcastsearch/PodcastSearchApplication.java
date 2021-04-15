@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PodcastSearchApplication {
 
-	@RequestMapping("/")
-	public String home() {
-		return "Hello Podcast Search";
-	}
+	// Spring boot will server client page by default
 
 	public static void main(String[] args) {
 		SpringApplication.run(PodcastSearchApplication.class, args);
