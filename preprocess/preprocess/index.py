@@ -77,7 +77,8 @@ def create_episode_index():
             'episode_uri': {'type': 'keyword'},
             'episode_name': {'type': 'text'},
             'episode_description': {'type': 'text'},
-            'duration': {'type': 'double'}
+            'duration': {'type': 'double'},
+            'transcripts': {'type': 'text'},
         }
     }
 
@@ -100,7 +101,8 @@ def index_episodes():
             'episode_uri': episode.episode_uri,
             'episode_name': episode.episode_name,
             'episode_description': episode.episode_description,
-            'duration': episode.duration
+            'duration': episode.duration,
+            'transcripts': ''
         })
 
         count += 1

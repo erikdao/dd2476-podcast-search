@@ -15,8 +15,8 @@ pushd ${WORKING_DIR}
 echo "Setting up database and load metadata"
 
 
-DATA_DIR=data/metadata_samples.tsv
-# DATA_DIR="data/podcasts-transcript/spotify-podcasts-2020/metadata.tsv"
+# DATA_DIR=data/metadata_samples.tsv
+DATA_DIR="data/podcasts-transcript/spotify-podcasts-2020/metadata.tsv"
 
 poetry run python metadata.py -f ${DATA_DIR}
 
