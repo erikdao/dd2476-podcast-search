@@ -1,8 +1,11 @@
 package dd2476.group18.podcastsearch.models;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -38,4 +41,7 @@ public class Show {
 
     @Column(name = "show_filenam_prefix")
     private String showFileNamePrefix;
+
+    @OneToMany(mappedBy = "show")
+    private Set<Episode> episodes;
 }
