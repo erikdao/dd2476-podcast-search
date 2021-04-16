@@ -18,7 +18,8 @@ env/
 .ipynb_checkpoints/
 
 # front end files
-client/node_modules
+Backend/client/node_modules
+backend/client/node_modules
 
 
 

@@ -31,6 +31,10 @@ public class Show {
         this.showUri = showUri;
         this.showName = showName;
     }
+    public Show(){
+        this.showUri = "";
+        this.showName = "";
+    }
 
     public String getShowUri() {
         return showUri;
