@@ -19,6 +19,7 @@ env/
 
 # front end files
 Backend/client/node_modules
+backend/client/node_modules
 
 
 
