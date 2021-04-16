@@ -57,19 +57,22 @@ def read_all_json_paths(transcripts_path: str) -> None:
     # dir_path is the full path to the show directory
     # files is a list of all the files in the show directory
     show_directories = [(dir_path, files) for (dir_path, _, files) in os.walk(transcripts_path) if len(files) > 0]
-    for directory in show_directories[0:2000]: # Change to whole show_directories
+    print(show_directories[0])
+    for directory in show_directories[0:20]: # Change to whole show_directories
         for json_file in directory[1]:
             json_path = os.path.join(transcripts_path, f"{directory[0]}/{json_file}")
             transcript = read_transcript(json_path)
             if(len(transcript) > 0):
                 episode_id = json_file.replace('.json', '')
-                index_transcript(transcript, episode_id)
+                # print(episode_id)
+                # index_transcript(transcript, episode_id)
 
 
 def main():
     current_path = os.path.realpath(__file__)
     root_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_path)))
     transcripts_path = os.path.join(root_dir, TRANSCRIPT_ROOT_PATH)
+    print(transcripts_path)
     read_all_json_paths(transcripts_path)
 
 
