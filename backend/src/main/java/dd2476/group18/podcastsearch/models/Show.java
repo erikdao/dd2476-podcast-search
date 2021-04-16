@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "shows")
 public class Show {
     @Id
+    private String id;
+
     @Column(name = "show_uri")
     private String showUri;
 
@@ -27,6 +29,9 @@ public class Show {
 
     @Column(name = "publisher")
     private String publisher;
+
+    @Column(name = "language")
+    private String language;
 
     @Column(name = "rss_link")
     private String rssLink;
