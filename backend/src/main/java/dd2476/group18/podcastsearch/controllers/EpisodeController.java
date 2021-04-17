@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @RestController
 public class EpisodeController {
     final EpisodeRepository episodeRepository;
+
+    public EpisodeController(EpisodeRepository episodeRepository) {
+        this.episodeRepository = episodeRepository;
+    }
 
     @GetMapping("/search2")
     public Episode findByUri(@PathParam(value = "show_uri") String episodeUri) {

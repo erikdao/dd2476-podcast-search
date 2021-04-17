@@ -43,4 +43,87 @@ public class Episode {
     public String toString() {
         return "Episode [EpisodeUri=" + episodeUri + ", EpisodeName=" + episodeName + "]";
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEpisodeUri() {
+        return episodeUri;
+    }
+
+    public void setEpisodeUri(String episodeUri) {
+        this.episodeUri = episodeUri;
+    }
+
+    public String getEpisodeName() {
+        return episodeName;
+    }
+
+    public void setEpisodeName(String episodeName) {
+        this.episodeName = episodeName;
+    }
+
+    public String getEpisodeDescription() {
+        return episodeDescription;
+    }
+
+    public void setEpisodeDescription(String episodeDescription) {
+        this.episodeDescription = episodeDescription;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getEpisodeFilenamePrefix() {
+        return episodeFilenamePrefix;
+    }
+
+    public void setEpisodeFilenamePrefix(String episodeFilenamePrefix) {
+        this.episodeFilenamePrefix = episodeFilenamePrefix;
+    }
+
+    public Show getShow() {
+        return show;
+    }
+
+    public void setShow(Show show) {
+        this.show = show;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Episode other = (Episode) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    
 }

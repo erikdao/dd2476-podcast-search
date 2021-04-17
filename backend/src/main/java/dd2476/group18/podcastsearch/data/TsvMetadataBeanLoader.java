@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import com.univocity.parsers.common.DataProcessingException;
@@ -14,11 +15,21 @@ import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
+import dd2476.group18.podcastsearch.models.Show;
+
+/**
+ * This class loads the metadata from TSV file and parse
+ * them into MetadataBean objects
+ */
 public class TsvMetadataBeanLoader {
+    // Loader stuff
     private BufferedReader reader;
     private TsvParser parser;
     private TsvParserSettings parserSettings;
     private BeanListProcessor<MetadataBean> rowProcessor;
+
+    // Persistence stuff
+    private HashSet<Show> shows = new HashSet<>();
 
     public TsvMetadataBeanLoader(Path tsvFile) {
         try {
@@ -46,5 +57,13 @@ public class TsvMetadataBeanLoader {
     public List<MetadataBean> getMetaDataBean() {
         parser.parse(reader);
         return rowProcessor.getBeans();
+    }
+
+    public HashSet<Show> createShowSet(List<MetadataBean> metaDataBean) {
+        for (MetadataBean mb: metaDataBean) {
+            // Create show instance
+            shows.add(mb.createShowInstance());
+        }
+        return shows;
     }
 }

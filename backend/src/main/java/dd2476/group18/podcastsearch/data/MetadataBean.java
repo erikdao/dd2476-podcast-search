@@ -2,6 +2,7 @@ package dd2476.group18.podcastsearch.data;
 
 import com.univocity.parsers.annotations.Parsed;
 
+import dd2476.group18.podcastsearch.models.Show;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -139,5 +140,21 @@ public class MetadataBean {
 
     public void setEpisodeFilenamePrefix(String episodeFilenamePrefix) {
         this.episodeFilenamePrefix = episodeFilenamePrefix;
+    }
+
+    public Show createShowInstance() {
+        String id = this.showUri.replace("spotify:show:", "");
+
+        Show show = new Show();
+        show.setId(id);
+        show.setShowUri(this.getShowUri());
+        show.setShowName(this.getShowName());
+        show.setShowDescription(this.getShowDescription());
+        show.setPublisher(this.getPublisher());
+        show.setLanguage(this.getLanguage());
+        show.setRssLink(this.getRssLink());
+        show.setShowFileNamePrefix(this.getShowFileNamePrefix());
+
+        return show;
     }
 }
