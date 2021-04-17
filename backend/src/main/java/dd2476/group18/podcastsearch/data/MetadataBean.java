@@ -2,6 +2,7 @@ package dd2476.group18.podcastsearch.data;
 
 import com.univocity.parsers.annotations.Parsed;
 
+import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -145,16 +146,33 @@ public class MetadataBean {
     public Show createShowInstance() {
         String id = this.showUri.replace("spotify:show:", "");
 
-        Show show = new Show();
-        show.setId(id);
-        show.setShowUri(this.getShowUri());
-        show.setShowName(this.getShowName());
-        show.setShowDescription(this.getShowDescription());
-        show.setPublisher(this.getPublisher());
-        show.setLanguage(this.getLanguage());
-        show.setRssLink(this.getRssLink());
-        show.setShowFileNamePrefix(this.getShowFileNamePrefix());
+        Show show = Show.builder() 
+            .id(id)
+            .showUri(this.getShowUri())
+            .showName(this.getShowName())
+            .showDescription(this.getShowDescription())
+            .publisher(this.getPublisher())
+            .language(this.getLanguage())
+            .rssLink(this.getRssLink())
+            .showFileNamePrefix(this.getShowFileNamePrefix())
+            .build();
 
         return show;
+    }
+
+    public Episode createEpisodeInstance(Show show) {
+        String id = this.episodeUri.replace("spotify:episode:", "");
+
+        Episode episode = Episode.builder()
+            .id(id)
+            .episodeUri(this.getEpisodeUri())
+            .episodeName(this.getEpisodeName())
+            .episodeDescription(this.getEpisodeDescription())
+            .duration(this.getDuration())
+            .episodeFilenamePrefix(this.getEpisodeFilenamePrefix())
+            .show(show)
+            .build();
+        
+        return episode;
     }
 }

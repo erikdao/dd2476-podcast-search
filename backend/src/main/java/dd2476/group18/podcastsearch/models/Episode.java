@@ -9,11 +9,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "episodes", indexes = {
@@ -49,62 +51,6 @@ public class Episode {
         return "Episode [EpisodeUri=" + episodeUri + ", EpisodeName=" + episodeName + "]";
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEpisodeUri() {
-        return episodeUri;
-    }
-
-    public void setEpisodeUri(String episodeUri) {
-        this.episodeUri = episodeUri;
-    }
-
-    public String getEpisodeName() {
-        return episodeName;
-    }
-
-    public void setEpisodeName(String episodeName) {
-        this.episodeName = episodeName;
-    }
-
-    public String getEpisodeDescription() {
-        return episodeDescription;
-    }
-
-    public void setEpisodeDescription(String episodeDescription) {
-        this.episodeDescription = episodeDescription;
-    }
-
-    public double getDuration() {
-        return duration;
-    }
-
-    public void setDuration(double duration) {
-        this.duration = duration;
-    }
-
-    public String getEpisodeFilenamePrefix() {
-        return episodeFilenamePrefix;
-    }
-
-    public void setEpisodeFilenamePrefix(String episodeFilenamePrefix) {
-        this.episodeFilenamePrefix = episodeFilenamePrefix;
-    }
-
-    public Show getShow() {
-        return show;
-    }
-
-    public void setShow(Show show) {
-        this.show = show;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -129,6 +75,4 @@ public class Episode {
             return false;
         return true;
     }
-
-    
 }

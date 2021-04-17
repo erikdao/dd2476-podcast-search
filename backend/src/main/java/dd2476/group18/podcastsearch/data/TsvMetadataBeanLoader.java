@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
+import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
 
 /**
@@ -28,8 +30,9 @@ public class TsvMetadataBeanLoader {
     private TsvParserSettings parserSettings;
     private BeanListProcessor<MetadataBean> rowProcessor;
 
-    // Persistence stuff
+    // Persistent stuff
     private HashSet<Show> shows = new HashSet<>();
+    private HashSet<Episode> episodes = new HashSet<>();
 
     public TsvMetadataBeanLoader(Path tsvFile) {
         try {
@@ -59,11 +62,20 @@ public class TsvMetadataBeanLoader {
         return rowProcessor.getBeans();
     }
 
-    public HashSet<Show> createShowSet(List<MetadataBean> metaDataBean) {
+    public void createShowAndEpisodeList(List<MetadataBean> metaDataBean) {
         for (MetadataBean mb: metaDataBean) {
             // Create show instance
-            shows.add(mb.createShowInstance());
+            Show show = mb.createShowInstance();
+            shows.add(show);
+            episodes.add(mb.createEpisodeInstance(show));
         }
-        return shows;
+    }
+
+    public ArrayList<Show> getShowList() {
+        return new ArrayList<Show>(shows);
+    }
+
+    public ArrayList<Episode> getEpisodeList() {
+        return new ArrayList<Episode>(episodes);
     }
 }

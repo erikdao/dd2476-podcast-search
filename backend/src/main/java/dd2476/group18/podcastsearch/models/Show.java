@@ -2,6 +2,7 @@ package dd2476.group18.podcastsearch.models;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,11 +12,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "shows", indexes = {
@@ -47,80 +50,8 @@ public class Show {
     @Column(name = "show_filenam_prefix")
     private String showFileNamePrefix;
 
-    @OneToMany(mappedBy = "show", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "show", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Episode> episodes;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getShowUri() {
-        return showUri;
-    }
-
-    public void setShowUri(String showUri) {
-        this.showUri = showUri;
-    }
-
-    public String getShowName() {
-        return showName;
-    }
-
-    public void setShowName(String showName) {
-        this.showName = showName;
-    }
-
-    public String getShowDescription() {
-        return showDescription;
-    }
-
-    public void setShowDescription(String showDescription) {
-        this.showDescription = showDescription;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getRssLink() {
-        return rssLink;
-    }
-
-    public void setRssLink(String rssLink) {
-        this.rssLink = rssLink;
-    }
-
-    public String getShowFileNamePrefix() {
-        return showFileNamePrefix;
-    }
-
-    public void setShowFileNamePrefix(String showFileNamePrefix) {
-        this.showFileNamePrefix = showFileNamePrefix;
-    }
-
-    public Set<Episode> getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(Set<Episode> episodes) {
-        this.episodes = episodes;
-    }
 
     @Override
     public int hashCode() {

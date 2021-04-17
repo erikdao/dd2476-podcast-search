@@ -3,7 +3,6 @@ package dd2476.group18.podcastsearch.data;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
+import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.repositories.ShowRepository;
 
 /**
@@ -24,10 +25,12 @@ import dd2476.group18.podcastsearch.repositories.ShowRepository;
 public class DataPreprocessorApplication implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(DataPreprocessorApplication.class);
     private final ShowRepository showRepository;
+    private final EpisodeRepository episodeRepository;
 
     @Autowired
-    public DataPreprocessorApplication(ShowRepository showRepository) {
+    public DataPreprocessorApplication(ShowRepository showRepository, EpisodeRepository episodeRepository) {
         this.showRepository = showRepository;
+        this.episodeRepository = episodeRepository;
     }
 
     @Override
@@ -44,12 +47,15 @@ public class DataPreprocessorApplication implements CommandLineRunner {
 
         // Step 2. Create a set of shows and their corresponding epsiodes from the metadata beans
         List<MetadataBean> metadata = loader.getMetaDataBean();
-        HashSet<Show> shows = loader.createShowSet(metadata);
+        loader.createShowAndEpisodeList(metadata);
 
         // Step 3. Persist the shows and episodes to database
-        ArrayList<Show> showList = new ArrayList<Show>(shows);
-        showRepository.saveAll(showList);
-        
-        System.out.println("Inserted " + shows.size() + " shows to database!");
+        ArrayList<Show> showList = loader.getShowList();
+        showRepository.saveAll(showList); 
+        System.out.println("Inserted " + showList.size() + " shows to database!");
+
+        ArrayList<Episode> episodeList = loader.getEpisodeList();
+        episodeRepository.saveAll(episodeList); 
+        System.out.println("Inserted " + episodeList.size() + " episodes to database!");
     }
 }
