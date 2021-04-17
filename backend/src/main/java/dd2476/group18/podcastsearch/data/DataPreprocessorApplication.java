@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 
 import dd2476.group18.podcastsearch.models.Show;
@@ -39,10 +38,8 @@ public class DataPreprocessorApplication implements CommandLineRunner {
     public void importMetaData(String... args) {
         // Step 1. Read and parse the metadata tsv file
         String currentDir = System.getProperty("user.dir");
-        Path projectDir = Paths.get(currentDir); // .getParent();
-        System.out.println("projectDir: " + projectDir.toString());
+        Path projectDir = Paths.get(currentDir);
         Path tsvPath = Paths.get(projectDir + "/data/podcasts-transcript/metadata.tsv");
-        System.out.println("tsvPath: " + tsvPath.toString());
         TsvMetadataBeanLoader loader = new TsvMetadataBeanLoader(tsvPath);
 
         // Step 2. Create a set of shows and their corresponding epsiodes from the metadata beans

@@ -3,6 +3,7 @@ package dd2476.group18.podcastsearch.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -15,9 +16,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "episodes")
+@Table(name = "episodes", indexes = {
+    @Index(columnList = "episode_uri"),
+    @Index(columnList = "show_id")
+})
 public class Episode {
     @Id
+    @Column(name = "id", length = 50)
     private String id;
 
     @Column(name = "episode_uri")
@@ -26,11 +31,11 @@ public class Episode {
     @Column(name = "episode_name")
     private String episodeName;
 
-    @Column(name = "episode_description")
+    @Column(name = "episode_description", columnDefinition = "TEXT")
     private String episodeDescription;
 
     @Column(name = "duration")
-    private String duration;
+    private double duration;
 
     @Column(name = "episode_filename_prefix")
     private String episodeFilenamePrefix;
@@ -76,11 +81,11 @@ public class Episode {
         this.episodeDescription = episodeDescription;
     }
 
-    public String getDuration() {
+    public double getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
 

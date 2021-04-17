@@ -4,7 +4,9 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -16,9 +18,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "shows")
+@Table(name = "shows", indexes = {
+    @Index(columnList = "show_uri")
+})
 public class Show {
     @Id
+    @Column(name = "id", length = 50)
     private String id;
 
     @Column(name = "show_uri")
@@ -42,7 +47,7 @@ public class Show {
     @Column(name = "show_filenam_prefix")
     private String showFileNamePrefix;
 
-    @OneToMany(mappedBy = "show")
+    @OneToMany(mappedBy = "show", fetch = FetchType.LAZY)
     private Set<Episode> episodes;
 
     public String getId() {
