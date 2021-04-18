@@ -22,11 +22,13 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "transcripts", indexes = {
@@ -49,6 +51,6 @@ public class Transcript {
     private List<WordToken> wordTokens;
     
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "episode_id", referencedColumnName = "id")
+    @JoinColumn(name = "episode_id", referencedColumnName = "id", unique = true)
     private Episode episode;
 }

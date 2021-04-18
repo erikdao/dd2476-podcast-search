@@ -1,4 +1,4 @@
-package dd2476.group18.podcastsearch.data;
+package dd2476.group18.podcastsearch.dataloader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
