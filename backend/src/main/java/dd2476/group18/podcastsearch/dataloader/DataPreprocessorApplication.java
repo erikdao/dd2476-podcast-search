@@ -24,10 +24,8 @@ import org.springframework.stereotype.Component;
 
 import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
-import dd2476.group18.podcastsearch.models.Transcript;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.repositories.ShowRepository;
-import dd2476.group18.podcastsearch.repositories.TranscriptRepository;
 
 /**
  * A util to import show and episode metadata
@@ -41,7 +39,7 @@ public class DataPreprocessorApplication implements CommandLineRunner {
     private final EpisodeRepository episodeRepository;
 
     @Autowired
-    public DataPreprocessorApplication(ShowRepository showRepository, EpisodeRepository episodeRepository)
+    public DataPreprocessorApplication(ShowRepository showRepository, EpisodeRepository episodeRepository) {
         this.showRepository = showRepository;
         this.episodeRepository = episodeRepository;
     }
@@ -74,38 +72,8 @@ public class DataPreprocessorApplication implements CommandLineRunner {
     }
 
     public void importTranscriptData(String... args) {
-        String sampleEpisodeId = "1RuLO0g4ps1p6kT3NB194o";
-
-        String currentDir = System.getProperty("user.dir");
-        Path projectDir = Paths.get(currentDir);
-        Path tsvPath = Paths.get(projectDir + "/data/podcasts-transcript/spotify-podcasts-2020/podcasts-transcripts/" +
-                                    "0/E/show_0E2L8zPYhApYkmWWFef7aK/1RuLO0g4ps1p6kT3NB194o.json");
-
-        final ObjectMapper objectMapper = new ObjectMapper();
-        AlternativeResultBean alListBean = new AlternativeResultBean();
-
-        try {
-            alListBean = objectMapper.readValue(
-                new File(tsvPath.toString()),
-            new TypeReference<AlternativeResultBean>(){}
-            );
-        } catch (JsonParseException e) {
-            System.err.println("JsonParseException " + e.getMessage());
-        } catch (JsonMappingException e) {
-            System.err.println("JsonMappingException " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("IOException " + e.getMessage());
-        }
-
-        alListBean.combineTranscriptsAndWords();
-
-        Episode episode = episodeRepository.findById(sampleEpisodeId).orElseThrow();
-        Transcript transcript = Transcript.builder()
-            .episode(episode)
-            .transcript(alListBean.getTranscripts())
-            .wordTokens(alListBean.buildWordTokenList())
-            .build();
-        episode.setTranscript(transcript);
-        episodeRepository.save(episode);
+        String workingDir = System.getProperty("user.dir");
+        TranscriptLoader loader = new TranscriptLoader(workingDir, this.episodeRepository);
+        loader.executePipeline(args);
     }
 }

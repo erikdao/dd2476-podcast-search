@@ -57,4 +57,9 @@ public class AlternativeResultBean {
         }
         return tokens;
     }
+
+    public void reset() {
+        transcripts = null;
+        wordBeans = new ArrayList<>();
+    }
 }
