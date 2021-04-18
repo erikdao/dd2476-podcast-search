@@ -34,7 +34,6 @@ public class TranscriptLoader {
         this.episodeRepository = episodeRepository;
     }
 
-    // Step 1. read a file list text file
     public void executePipeline(String... args) {
         String filePath = workingDir + JSON_FILES_PATH;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
