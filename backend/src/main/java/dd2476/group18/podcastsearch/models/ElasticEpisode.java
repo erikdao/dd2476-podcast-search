@@ -9,7 +9,8 @@ import java.io.Serializable;
 @Document(indexName = "episodes")
 public class ElasticEpisode implements Serializable {
     @Id
-    private String id;
+    @Field(name = "id")
+    private String episodeId;
 
     private double duration;
 
@@ -27,8 +28,8 @@ public class ElasticEpisode implements Serializable {
 
     private String transcript;
 
-    public String getId() {
-        return id;
+    public String getEpisodeId() {
+        return episodeId;
     }
 
     public String getEpisodeUri() {
@@ -55,8 +56,8 @@ public class ElasticEpisode implements Serializable {
         return episodeDescription;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEpisodeId(String episodeId) {
+        this.episodeId = episodeId;
     }
 
     public void setEpisodeUri(String episodeUri) {

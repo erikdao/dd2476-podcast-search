@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ElasticEpisodeRepository extends ElasticsearchRepository<ElasticEpisode, String> {
-    List<ElasticEpisode> findByEpisodeUri(String uri);
+    ElasticEpisode findByEpisodeUri(String uri);
 
-    Optional<ElasticEpisode> findById(String id);
+    ElasticEpisode findByEpisodeId(String id);
 }
