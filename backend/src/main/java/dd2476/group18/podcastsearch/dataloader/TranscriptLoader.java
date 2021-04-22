@@ -3,6 +3,8 @@ package dd2476.group18.podcastsearch.dataloader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -39,6 +41,8 @@ public class TranscriptLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             int count = 0;
+
+            Instant start = Instant.now();
             while ((line = br.readLine()) != null) {
                 // Load and parse transcript from json file
                 String jsonPath = workingDir + TRANSCRIPT_PATH + line.strip();
@@ -53,8 +57,15 @@ public class TranscriptLoader {
 
                 if (count++ % 1000 == 0) {
                     System.out.println("Persisted transcript and tokens for " + count + " episodes");
+                    Instant intermediate = Instant.now();
+                    Duration tillNow = Duration.between(start, intermediate);
+                    System.out.println("Time till now: " + tillNow.toMinutes() + " minutes");
                 }
             }
+
+            Instant end = Instant.now();
+            Duration timeElapsed = Duration.between(start, end);
+            System.out.println("Time taken: " + timeElapsed.toMinutes() + " minutes");
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
         } catch (IOException e) {

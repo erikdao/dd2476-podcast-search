@@ -31,8 +31,8 @@ public class DataPreprocessorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        importMetaData(args);
-        // importTranscriptData(args);
+        // importMetaData(args);
+        importTranscriptData(args);
     }
 
     public void importMetaData(String... args) {
@@ -44,7 +44,8 @@ public class DataPreprocessorApplication implements CommandLineRunner {
 
     public void importTranscriptData(String... args) {
         String workingDir = System.getProperty("user.dir");
-        TranscriptLoader loader = new TranscriptLoader(workingDir, this.episodeRepository);
+        Path projectDir = Paths.get(workingDir).getParent();
+        TranscriptLoader loader = new TranscriptLoader(projectDir.toString(), this.episodeRepository);
         loader.executePipeline(args);
     }
 }
