@@ -47,7 +47,7 @@ public class DataPreprocessorApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // importMetaData(args);
-        importTranscriptData(args);
+        // importTranscriptData(args);
     }
 
     public void importMetaData(String... args) {
