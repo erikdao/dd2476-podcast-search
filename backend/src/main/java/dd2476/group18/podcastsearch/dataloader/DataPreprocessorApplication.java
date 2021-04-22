@@ -46,14 +46,14 @@ public class DataPreprocessorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // importMetaData(args);
+        importMetaData(args);
         // importTranscriptData(args);
     }
 
     public void importMetaData(String... args) {
         // Step 1. Read and parse the metadata tsv file
         String currentDir = System.getProperty("user.dir");
-        Path projectDir = Paths.get(currentDir);
+        Path projectDir = Paths.get(currentDir).getParent();
         Path tsvPath = Paths.get(projectDir + "/data/podcasts-transcript/metadata.tsv");
         TsvMetadataBeanLoader loader = new TsvMetadataBeanLoader(tsvPath);
 

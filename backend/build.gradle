@@ -40,36 +40,36 @@ node {
     // Set the work directory where node_modules should be located
     nodeModulesDir = file("${project.projectDir}/client")
 }
-// Connect copyFrontendToBuild task to run before processResources task
-processResources{
-    dependsOn 'copyFrontendToBuild'
-}
+// // Connect copyFrontendToBuild task to run before processResources task
+// processResources{
+//     dependsOn 'copyFrontendToBuild'
+// }
 
-// Copy frontend build to right folder to be served, task runs before after npmBuild
-task copyFrontendToBuild(type: Copy) {
-    dependsOn 'npmBuild'
-    from "$projectDir/client/build/"
-    into "$buildDir/resources/main/static"
-}
+// // Copy frontend build to right folder to be served, task runs before after npmBuild
+// task copyFrontendToBuild(type: Copy) {
+//     dependsOn 'npmBuild'
+//     from "$projectDir/client/build/"
+//     into "$buildDir/resources/main/static"
+// }
 
-// Builds frontend, task runs before after npminstall2
-task npmBuild(type: NpmTask) {
-    dependsOn 'npmInstall2'
-    execOverrides {
-        it.workingDir = 'client'
-    }
-    args = ['run', 'build']
-}
+// // Builds frontend, task runs before after npminstall2
+// task npmBuild(type: NpmTask) {
+//     dependsOn 'npmInstall2'
+//     execOverrides {
+//         it.workingDir = 'client'
+//     }
+//     args = ['run', 'build']
+// }
 
-// Install frontend dependencies in package.json, task runs before after npmSetup
-task npmInstall2(type: NpmTask) {
-    dependsOn 'npmSetup'
-    execOverrides {
-        it.ignoreExitValue = true
-        it.workingDir = 'client'
-    }
-    args = ['install']
-}
+// // Install frontend dependencies in package.json, task runs before after npmSetup
+// task npmInstall2(type: NpmTask) {
+//     dependsOn 'npmSetup'
+//     execOverrides {
+//         it.ignoreExitValue = true
+//         it.workingDir = 'client'
+//     }
+//     args = ['install']
+// }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
@@ -86,9 +86,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-test {
-	useJUnitPlatform()
-}
-
-
-
+// test {
+// 	useJUnitPlatform()
+// }
