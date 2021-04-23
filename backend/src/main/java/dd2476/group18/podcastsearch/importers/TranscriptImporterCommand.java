@@ -30,7 +30,7 @@ public class TranscriptImporterCommand implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Importing Episodes' transcripts...");
-        importTranscript(args);
+        // importTranscript(args);
     }
 
     private void importTranscript(String... args) {

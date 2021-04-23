@@ -85,4 +85,15 @@ public class Episode {
             return false;
         return true;
     }
+
+    public EpisodeDocument createDocument() {
+        return EpisodeDocument.builder()
+            .id(this.getId())
+            .episodeName(this.getEpisodeName())
+            .episodeUri(this.getEpisodeUri())
+            .episodeDescription(this.getEpisodeDescription())
+            .duration(this.getDuration())
+            .transcript(this.getTranscript().getTranscript())
+            .build();
+    }
 }
