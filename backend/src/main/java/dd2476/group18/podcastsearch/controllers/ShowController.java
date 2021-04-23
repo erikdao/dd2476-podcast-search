@@ -19,8 +19,4 @@ public class ShowController {
     public Show findShowById(@PathVariable("id") String id) {
         return showRepository.findById(id).get();
     }
-
-    public void find() {
-        Show show = showRepository.findById(id);
-    }
 }
