@@ -14,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +27,12 @@ public class TranscriptImporterCommand implements CommandLineRunner {
     final ForkJoinPool workerPool;
     @Autowired
     final EpisodeRepository episodeRepository;
+    final EpisodeDocumentRepository episodeDocumentRepository;
 
     @Override
     public void run(String... args) throws Exception {
         log.info("Importing Episodes' transcripts...");
-        // importTranscript(args);
+        //importTranscript(args);
     }
 
     private void importTranscript(String... args) {
@@ -43,9 +45,9 @@ public class TranscriptImporterCommand implements CommandLineRunner {
         Thread summary = new Thread(() -> {
             Instant start = Instant.now();
             while (!workerPool.isShutdown()) {
-                if (counter.get() % 1000L == 0) {
-                    log.info("Persisted transcript for " + counter.get() + " episodes");
-                }
+                // if (counter.get() % 10000L == 0) {
+                //     log.info("Persisted transcript for " + counter.get() + " episodes");
+                // }
             }
             Instant end = Instant.now();
             Duration timeElapsed = Duration.between(start, end);
@@ -62,7 +64,7 @@ public class TranscriptImporterCommand implements CommandLineRunner {
                     .forEach(p -> {
                         String fileName = p.getFileName().toString();
                         String episodeId = fileName.replace(".json", "");
-                        TranscriptLoader loader = new TranscriptLoader(episodeRepository);
+                        TranscriptLoader loader = new TranscriptLoader(episodeRepository, episodeDocumentRepository);
                         AlternativeResultBean transcriptBean = loader.loadTranscriptFromJson(p.toString());
                         loader.persistTranscript(transcriptBean, episodeId);
                         counter.set(counter.get() + 1);

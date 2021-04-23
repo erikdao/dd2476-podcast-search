@@ -1,4 +1,4 @@
-package dd2475.group18.podcastsearch.models;
+package dd2476.group18.podcastsearch.models;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;

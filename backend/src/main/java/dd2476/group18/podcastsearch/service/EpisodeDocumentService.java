@@ -1,13 +1,12 @@
 package dd2476.group18.podcastsearch.service;
 
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
-import dd2476.group18.podcastsearch.repositories.ElasticEpisodeRepository;
+import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
@@ -24,24 +23,16 @@ import java.util.stream.Collectors;
 public class EpisodeDocumentService {
     private final ElasticsearchOperations elasticsearchOperations;
     @Autowired
-    private final ElasticEpisodeRepository elasticEpisodeRepository;
-    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
-
-    /**
-     * Manually create the `episodes` index
-     */
-    public void createIndex() {
-        elasticsearchRestTemplate.indexOps(EpisodeDocument.class).create();
-    }
+    private final EpisodeDocumentRepository episodeDocumentRepository;
 
     // use elastic search to find a specific episode by id
     public EpisodeDocument findByEpisodeId(String id) {
-        return elasticEpisodeRepository.findById(id).get();
+        return episodeDocumentRepository.findById(id).get();
     }
 
     // use elastic search to find a specific episode by uri
     public EpisodeDocument findByEpisodeUri(String uri) {
-        return elasticEpisodeRepository.findByEpisodeUri(uri);
+        return episodeDocumentRepository.findByEpisodeUri(uri);
     }
 
     // use elastic search to find episodes that contains the given word in their transcripts

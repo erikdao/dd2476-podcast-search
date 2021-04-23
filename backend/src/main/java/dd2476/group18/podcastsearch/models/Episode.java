@@ -86,7 +86,7 @@ public class Episode {
         return true;
     }
 
-    public EpisodeDocument createDocument() {
+    public EpisodeDocument createEpisodeDocument() {
         return EpisodeDocument.builder()
             .id(this.getId())
             .episodeName(this.getEpisodeName())
@@ -96,5 +96,18 @@ public class Episode {
             .transcript(this.getTranscript().getTranscript())
             .showUri(this.getShow().getShowUri())
             .build();
+    }
+    public EpisodeDocument createEpisodeDocument(boolean includeTranscript) {
+        if (!includeTranscript) {
+            return EpisodeDocument.builder()
+                .id(this.getId())
+                .episodeName(this.getEpisodeName())
+                .episodeUri(this.getEpisodeUri())
+                .episodeDescription(this.getEpisodeDescription())
+                .duration(this.getDuration())
+                .showUri(this.getShow().getShowUri())
+                .build();
+        }
+        return this.createEpisodeDocument();
     }
 }
