@@ -47,6 +47,8 @@ public class ElasticSearchController {
         Query query = new CriteriaQuery(criteria);
         SearchHits<ElasticEpisode> searchHits = elasticsearchOperations.search(query, ElasticEpisode.class);
 
+        List<Episode> episodes = postProcess(searchHits)
+        
         return searchHits.getSearchHits().stream().map(SearchHit::getContent).collect(Collectors.toList());
     }
 
