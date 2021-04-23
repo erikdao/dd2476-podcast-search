@@ -26,6 +26,7 @@ public class ElasticEpisode implements Serializable {
     @Field(name = "show_uri")
     private String showUri;
 
+    @Field(name = "transcript")
     private String transcript;
 
     public String getEpisodeId() {

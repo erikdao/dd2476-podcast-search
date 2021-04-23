@@ -1,79 +1,71 @@
 package dd2476.group18.podcastsearch.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Table(name = "episodes")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "episodes", indexes = {
+    @Index(columnList = "episode_uri"),
+    @Index(columnList = "show_id")
+})
 public class Episode {
     @Id
+    @Column(name = "id", length = 50)
+    private String id;
+
     @Column(name = "episode_uri")
     private String episodeUri;
 
     @Column(name = "episode_name")
     private String episodeName;
 
-    @Column(name = "episode_description")
+    @Column(name = "episode_description", columnDefinition = "TEXT")
     private String episodeDescription;
 
     @Column(name = "duration")
-    private String duration;
+    private double duration;
 
     @Column(name = "episode_filename_prefix")
     private String episodeFilenamePrefix;
 
+    @ManyToOne
+    @JoinColumn(name = "show_id", nullable = false)
+    @JsonIgnore
+    private Show show;
 
-    public Episode(String episodeUri, String episodeName) {
-        this.episodeUri = episodeUri;
-        this.episodeName = episodeName;
-    }
-    public Episode(){
-        this.episodeUri = "";
-        this.episodeName = "";
-    }
+    @OneToOne(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Transcript transcript;
 
-    public String getEpisodeUri() {
-        return episodeUri;
-    }
-
-    public void setEpisodeUri(String episodeUri) {
-        this.episodeUri = episodeUri;
-    }
-
-    public String getEpisodeName() {
-        return episodeName;
-    }
-
-    public void setEpisodeName(String episodeName) {
-        this.episodeName = episodeName;
-    }
-
-    public String getEpisodeDescription() {
-        return episodeDescription;
-    }
-
-    public void setEpisodeDescription(String episodeDescription) {
-        this.episodeDescription = episodeDescription;
-    }
-
-    public String getEpisodeFileNamePrefix() {
-        return episodeFilenamePrefix;
-    }
-
-    public void setEpisodeFileNamePrefix(String episodeFileNamePrefix) {
-        this.episodeFilenamePrefix = episodeFileNamePrefix;
+    @Override
+    public String toString() {
+        return "Episode [EpisodeUri=" + episodeUri + ", EpisodeName=" + episodeName + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((episodeDescription == null) ? 0 : episodeDescription.hashCode());
-        result = prime * result + ((episodeFilenamePrefix == null) ? 0 : episodeFilenamePrefix.hashCode());
-        result = prime * result + ((episodeName == null) ? 0 : episodeName.hashCode());
-        result = prime * result + ((episodeUri == null) ? 0 : episodeUri.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -86,31 +78,11 @@ public class Episode {
         if (getClass() != obj.getClass())
             return false;
         Episode other = (Episode) obj;
-        if (episodeDescription == null) {
-            if (other.episodeDescription != null)
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!episodeDescription.equals(other.episodeDescription))
-            return false;
-        if (episodeFilenamePrefix == null) {
-            if (other.episodeFilenamePrefix != null)
-                return false;
-        } else if (!episodeFilenamePrefix.equals(other.episodeFilenamePrefix))
-            return false;
-        if (episodeName == null) {
-            if (other.episodeName != null)
-                return false;
-        } else if (!episodeName.equals(other.episodeName))
-            return false;
-        if (episodeUri == null) {
-            if (other.episodeUri != null)
-                return false;
-        } else if (!episodeUri.equals(other.episodeUri))
+        } else if (!id.equals(other.id))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Episode [EpisodeUri=" + episodeUri + ", EpisodeName=" + episodeName + "]";
     }
 }
