@@ -63,6 +63,6 @@ build/
 .vscode/
 
 ## Client
-client/node_modules
+**/node_modules
 client/build
 client/.env
