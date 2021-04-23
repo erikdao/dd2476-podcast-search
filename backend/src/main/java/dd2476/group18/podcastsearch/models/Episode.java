@@ -94,6 +94,7 @@ public class Episode {
             .episodeDescription(this.getEpisodeDescription())
             .duration(this.getDuration())
             .transcript(this.getTranscript().getTranscript())
+            .showUri(this.getShow().getShowUri())
             .build();
     }
 }
