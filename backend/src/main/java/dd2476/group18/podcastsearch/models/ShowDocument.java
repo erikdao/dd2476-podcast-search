@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Document(indexName = "shows")
-public class ElasticShow implements Serializable {
+public class ShowDocument implements Serializable {
     @Id
     @Field(name = "id")
     private String showId;
