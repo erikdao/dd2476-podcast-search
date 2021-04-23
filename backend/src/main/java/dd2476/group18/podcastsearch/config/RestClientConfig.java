@@ -20,5 +20,4 @@ public class RestClientConfig extends AbstractElasticsearchConfiguration {
 
         return RestClients.create(clientConfiguration).rest();
     }
-
 }

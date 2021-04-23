@@ -85,4 +85,29 @@ public class Episode {
             return false;
         return true;
     }
+
+    public EpisodeDocument createEpisodeDocument() {
+        return EpisodeDocument.builder()
+            .id(this.getId())
+            .episodeName(this.getEpisodeName())
+            .episodeUri(this.getEpisodeUri())
+            .episodeDescription(this.getEpisodeDescription())
+            .duration(this.getDuration())
+            .transcript(this.getTranscript().getTranscript())
+            .showUri(this.getShow().getShowUri())
+            .build();
+    }
+    public EpisodeDocument createEpisodeDocument(boolean includeTranscript) {
+        if (!includeTranscript) {
+            return EpisodeDocument.builder()
+                .id(this.getId())
+                .episodeName(this.getEpisodeName())
+                .episodeUri(this.getEpisodeUri())
+                .episodeDescription(this.getEpisodeDescription())
+                .duration(this.getDuration())
+                .showUri(this.getShow().getShowUri())
+                .build();
+        }
+        return this.createEpisodeDocument();
+    }
 }

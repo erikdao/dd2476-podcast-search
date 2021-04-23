@@ -82,4 +82,15 @@ public class Show {
     public String toString() {
         return "Show [id=" + id + ", showName=" + showName + "]";
     }
+
+    public ShowDocument createShowDocument() {
+        return ShowDocument.builder()
+            .id(this.getId())
+            .showName(this.getShowName())
+            .showDescription(this.getShowDescription())
+            .showUri(this.getShowUri())
+            .language(this.getLanguage())
+            .publisher(this.getPublisher())
+            .build();
+    }
 }

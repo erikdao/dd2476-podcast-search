@@ -4,20 +4,17 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.models.ShowDocument;
 import dd2476.group18.podcastsearch.service.EpisodeDocumentService;
 import dd2476.group18.podcastsearch.service.ShowDocumentService;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
+@RequiredArgsConstructor
 public class ElasticSearchController {
     private final EpisodeDocumentService episodeDocumentService;
     private final ShowDocumentService showDocumentService;
-
-    public ElasticSearchController(EpisodeDocumentService episodeDocumentService, ShowDocumentService showDocumentService) {
-        this.episodeDocumentService = episodeDocumentService;
-        this.showDocumentService = showDocumentService;
-    }
 
     // ---------------- for searching episodes ----------------
     @GetMapping("/episode/id/{id}")
@@ -44,7 +41,7 @@ public class ElasticSearchController {
     // ---------------- for searching shows ----------------
     @GetMapping("/show/id/{id}")
     public ShowDocument findShowById(@PathVariable("id") String id) {
-        return showDocumentService.findByShowId(id);
+        return showDocumentService.findById(id);
     }
 
     @GetMapping("/show/uri/{uri}")

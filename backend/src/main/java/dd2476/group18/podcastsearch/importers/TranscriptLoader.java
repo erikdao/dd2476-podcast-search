@@ -11,7 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dd2476.group18.podcastsearch.models.Episode;
+import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.models.Transcript;
+import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class TranscriptLoader {
 
     @Autowired
     private final EpisodeRepository episodeRepository;
+    private final EpisodeDocumentRepository episodeDocumentRepository;
 
     public AlternativeResultBean loadTranscriptFromJson(String jsonPath) {
         return this.loadTranscriptFromJson(new File(jsonPath));
@@ -47,15 +50,20 @@ public class TranscriptLoader {
     }
 
     public void persistTranscript(AlternativeResultBean results, String episodeId) {
-        results.combineTranscriptsAndWords();
-        
         Optional<Episode> episodeRS = episodeRepository.findById(episodeId);
         if (!episodeRS.isPresent()) {
             log.error("persistTranscript: episode id=" + episodeId + " not found");
             return;
         }
-        
         Episode episode = episodeRS.get();
+
+        results.combineTranscriptsAndWords();
+        persistTranscriptToDb(results, episode); 
+        updateEpisodeDocumentTranscript(results, episode);
+        results.reset();
+    }
+
+    private void persistTranscriptToDb(AlternativeResultBean results, Episode episode) { 
         Transcript transcript = Transcript.builder()
             .episode(episode)
             .transcript(results.getTranscripts())
@@ -63,7 +71,16 @@ public class TranscriptLoader {
             .build();
         episode.setTranscript(transcript);
         episodeRepository.save(episode);
+    }
 
-        results.reset();
+    private void updateEpisodeDocumentTranscript(AlternativeResultBean results, Episode episode) { 
+        Optional<EpisodeDocument> epDocRS = episodeDocumentRepository.findById(episode.getId());
+        if (!epDocRS.isPresent()) {
+            log.error("update Episode document transcript: episode id=" + episode.getId() + " not found");
+        }
+
+        EpisodeDocument doc = epDocRS.get();
+        doc.setTranscript(episode.getTranscript().getTranscript());
+        episodeDocumentRepository.save(doc);
     }
 }

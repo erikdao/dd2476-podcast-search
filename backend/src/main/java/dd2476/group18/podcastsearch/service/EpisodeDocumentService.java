@@ -2,6 +2,10 @@ package dd2476.group18.podcastsearch.service;
 
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -13,19 +17,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class EpisodeDocumentService {
     private final ElasticsearchOperations elasticsearchOperations;
+    @Autowired
     private final EpisodeDocumentRepository episodeDocumentRepository;
-
-    public EpisodeDocumentService(ElasticsearchOperations elasticsearchOperations, EpisodeDocumentRepository episodeDocumentRepository) {
-        this.elasticsearchOperations = elasticsearchOperations;
-        this.episodeDocumentRepository = episodeDocumentRepository;
-    }
 
     // use elastic search to find a specific episode by id
     public EpisodeDocument findByEpisodeId(String id) {
-        return episodeDocumentRepository.findByEpisodeId(id);
+        return episodeDocumentRepository.findById(id).get();
     }
 
     // use elastic search to find a specific episode by uri
@@ -44,9 +46,9 @@ public class EpisodeDocumentService {
 
     public List<EpisodeDocument> searchEpisodeByDescription(String... words) {
         if (words.length == 1) {
-            System.out.println("One word query");
+            log.info("One word query");
         } else {
-            System.out.println("Multi-word query");
+            log.info("Multi-word query");
         }
         Criteria criteria = new Criteria("description").contains(words[0]).contains(words[1]);
         Query query = new CriteriaQuery(criteria);

@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EpisodeDocumentRepository extends ElasticsearchRepository<EpisodeDocument, String> {
     EpisodeDocument findByEpisodeUri(String uri);
-
-    EpisodeDocument findByEpisodeId(String id);
 }
