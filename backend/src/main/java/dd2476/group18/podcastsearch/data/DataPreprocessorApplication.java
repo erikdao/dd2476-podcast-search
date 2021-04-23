@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class DataPreprocessorApplication implements CommandLineRunner {
-    public static void main(String[] args) {
-        System.out.println("Starting the application");
-        SpringApplication.run(DataPreprocessorApplication.class, args);
-        System.out.println("Application finished");
-    }
+    // public static void main(String[] args) {
+    //     System.out.println("Starting the application");
+    //     SpringApplication.run(DataPreprocessorApplication.class, args);
+    //     System.out.println("Application finished");
+    // }
 
     @Override
     public void run(String... args) {
