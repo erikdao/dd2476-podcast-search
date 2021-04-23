@@ -9,16 +9,11 @@ const headers = {
 
 const client = axios.create({ headers });
 
-const request = async (options: AxiosRequestConfig) => {
+const request = (options: AxiosRequestConfig) => {
   const onSuccess = (res: any) => res;
   const onError = (err: any) => { throw err; };
 
-  try {
-    const res = await client(options);
-    return onSuccess(res);
-  } catch (err) {
-    return onError(err);
-  }
+  return client(options).then(onSuccess).catch(onError);
 }
 
 export default request;

@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ShowApiService from '../api/show';
 import { PageTitle, ShowList } from '../components';
+import { TShow } from '../types';
 
 function HomePage() {
+  const [shows, setShows] = useState<TShow[]>();
+
+  const loadShows = async () => {
+    try {
+      const response = await ShowApiService.getAll();
+      const { data } = response;
+      setShows(data);
+    } catch (error) {
+      console.log("Error while fetching shows list");
+    }
+  }
+
+  useEffect(() => {
+    (async function useEffectLoadShows() {
+      await loadShows();
+    })();
+  }, []);
+
   return (
     <>
       <PageTitle title="Home" />
@@ -20,7 +40,7 @@ function HomePage() {
                 <div className="flex">
                   <h2 className="text-xl font-semibold text-gray-200 text-center w-full mb-6">Here are something you might be interested in</h2>
                 </div>
-                <ShowList />
+                <ShowList items={shows?.slice(0, 8)} />
               </div>
             </div>
           </main>

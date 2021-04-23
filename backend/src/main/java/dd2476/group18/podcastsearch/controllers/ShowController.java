@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ public class ShowController {
     private final ShowService showService;
 
     @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
     @JsonView(View.List.class)
     public List<Show> getAllShows(
         @RequestParam(defaultValue = "0") Integer pageNo,
