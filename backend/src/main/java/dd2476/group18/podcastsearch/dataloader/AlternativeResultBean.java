@@ -9,8 +9,10 @@ import dd2476.group18.podcastsearch.models.WordToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlternativeResultBean {
@@ -37,11 +39,11 @@ public class AlternativeResultBean {
                         try {
                             wordBeans = alternative.getWords();
                         } catch (NullPointerException e) {
-                            System.err.println("Cannot that word tokens attribute, anomaly in data");
+                            log.error("Cannot that word tokens attribute, anomaly in data");
                         }
                     }
                 } catch (NullPointerException e) {
-                    System.err.println("NullPointerException while trying to get transcript attribute from AlternativeItemBean. " + e.getMessage());
+                    log.error("NullPointerException while trying to get transcript attribute from AlternativeItemBean. " + e.getMessage());
                 }
             }
         }

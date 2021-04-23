@@ -3,15 +3,14 @@ package dd2476.group18.podcastsearch.dataloader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.repositories.ShowRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A util to import show and episode metadata
@@ -20,34 +19,22 @@ import dd2476.group18.podcastsearch.repositories.ShowRepository;
  */
 @Component
 @Order(2)
-public class DataPreprocessorApplication implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(DataPreprocessorApplication.class);
+@Slf4j
+@RequiredArgsConstructor
+public class MetaDataImporterCommand implements CommandLineRunner {
     private final ShowRepository showRepository;
     private final EpisodeRepository episodeRepository;
 
-    @Autowired
-    public DataPreprocessorApplication(ShowRepository showRepository, EpisodeRepository episodeRepository) {
-        this.showRepository = showRepository;
-        this.episodeRepository = episodeRepository;
-    }
-
     @Override
     public void run(String... args) {
-        // importMetaData(args);
-        // importTranscriptData(args);
+        // importMetaData(args); 
     }
 
-    public void importMetaData(String... args) {
+    private void importMetaData(String... args) {
+        log.info("Start importing metadata");
         String currentDir = System.getProperty("user.dir");
         Path projectDir = Paths.get(currentDir).getParent();
         MetaDataLoader loader = new MetaDataLoader(projectDir.toString(), this.showRepository, this.episodeRepository);
-        loader.executePipeline(args);
-    }
-
-    public void importTranscriptData(String... args) {
-        String workingDir = System.getProperty("user.dir");
-        Path projectDir = Paths.get(workingDir).getParent();
-        TranscriptLoader loader = new TranscriptLoader(projectDir.toString(), this.episodeRepository);
         loader.executePipeline(args);
     }
 }

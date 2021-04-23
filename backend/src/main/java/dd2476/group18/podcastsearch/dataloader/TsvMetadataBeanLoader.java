@@ -18,11 +18,13 @@ import com.univocity.parsers.tsv.TsvParserSettings;
 
 import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class loads the metadata from TSV file and parse
  * them into MetadataBean objects
  */
+@Slf4j
 public class TsvMetadataBeanLoader {
     // Loader stuff
     private BufferedReader reader;
@@ -38,7 +40,7 @@ public class TsvMetadataBeanLoader {
         try {
             reader = Files.newBufferedReader(tsvFile);
         } catch (IOException e) {
-            System.err.println("Error while reading file: " + tsvFile.toString());
+            log.error("Error while reading file: " + tsvFile.toString());
         }
         rowProcessor = new BeanListProcessor<MetadataBean>(MetadataBean.class);
 
@@ -49,8 +51,8 @@ public class TsvMetadataBeanLoader {
         parserSettings.setProcessorErrorHandler(new RowProcessorErrorHandler(){
             @Override
             public void handleError(DataProcessingException error, Object[] inputRow, ParsingContext context) {
-                System.err.println("Error processing row: " + Arrays.toString(inputRow));
-                System.err.println("Error details: column '" + error.getColumnName() + "' (index " + error.getColumnIndex() + ") has value '" + inputRow[error.getColumnIndex()] + "'");
+                log.error("Error processing row: " + Arrays.toString(inputRow));
+                log.error("Error details: column '" + error.getColumnName() + "' (index " + error.getColumnIndex() + ") has value '" + inputRow[error.getColumnIndex()] + "'");
             }
         });
 

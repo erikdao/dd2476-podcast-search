@@ -1,4 +1,4 @@
-package dd2476.group18.podcast_search;
+package dd2476.group18.podcastsearch.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
-import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
-import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 
 @Configuration
 public class RestClientConfig extends AbstractElasticsearchConfiguration {

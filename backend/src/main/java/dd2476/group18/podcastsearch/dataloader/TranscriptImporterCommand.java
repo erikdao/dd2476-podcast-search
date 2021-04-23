@@ -19,16 +19,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Order(1)
+@Order(2)
 @Component
 @RequiredArgsConstructor
-public class ThreadTranscriptLoaderApp implements CommandLineRunner {
+public class TranscriptImporterCommand implements CommandLineRunner {
     final ForkJoinPool workerPool;
     @Autowired
     final EpisodeRepository episodeRepository;
 
     @Override
     public void run(String... args) throws Exception {
+        // importTranscript(args);
+    }
+
+    private void importTranscript(String... args) {
         Path projectDir = Paths.get(System.getProperty("user.dir")).getParent();
         Path dataDir = Paths.get(projectDir.toString(), "data", "podcasts-transcript", "spotify-podcasts-2020", "podcasts-transcripts");
     
@@ -57,7 +61,7 @@ public class ThreadTranscriptLoaderApp implements CommandLineRunner {
                     .forEach(p -> {
                         String fileName = p.getFileName().toString();
                         String episodeId = fileName.replace(".json", "");
-                        TranscriptLoader loader = new TranscriptLoader(dataDir.toString(), episodeRepository);
+                        TranscriptLoader loader = new TranscriptLoader(episodeRepository);
                         AlternativeResultBean transcriptBean = loader.loadTranscriptFromJson(p.toString());
                         loader.persistTranscript(transcriptBean, episodeId);
                         counter.set(counter.get() + 1);

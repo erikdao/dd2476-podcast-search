@@ -9,13 +9,15 @@ import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.Show;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.repositories.ShowRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 public class MetaDataLoader {
     private static final String METADATA_PATH = "/data/podcasts-transcript/metadata.tsv";
 
-    private String workingDir;
+    private final String workingDir;
     private final ShowRepository showRepository;
     private final EpisodeRepository episodeRepository;
 
@@ -30,10 +32,10 @@ public class MetaDataLoader {
         // Step 3. Persist the shows and episodes to database
         ArrayList<Show> showList = loader.getShowList();
         showRepository.saveAll(showList); 
-        System.out.println("Inserted " + showList.size() + " shows to database!");
+        log.info("Inserted " + showList.size() + " shows to database!");
 
         ArrayList<Episode> episodeList = loader.getEpisodeList();
         episodeRepository.saveAll(episodeList); 
-        System.out.println("Inserted " + episodeList.size() + " episodes to database!");
+        log.info("Inserted " + episodeList.size() + " episodes to database!");
     }
 }
