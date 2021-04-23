@@ -11,6 +11,10 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import dd2476.group18.podcastsearch.views.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,30 +31,39 @@ import lombok.NoArgsConstructor;
 public class Show {
     @Id
     @Column(name = "id", length = 50)
+    @JsonView(View.List.class)
     private String id;
 
     @Column(name = "show_uri")
+    @JsonView(View.List.class)
     private String showUri;
 
     @Column(name = "show_name")
+    @JsonView(View.List.class)
     private String showName;
 
     @Column(name = "show_description", columnDefinition = "TEXT")
+    @JsonView(View.List.class)
     private String showDescription;
 
     @Column(name = "publisher")
+    @JsonView(View.List.class)
     private String publisher;
 
     @Column(name = "language")
+    @JsonView(View.List.class)
     private String language;
 
     @Column(name = "rss_link")
+    @JsonView(View.List.class)
     private String rssLink;
 
     @Column(name = "show_filenam_prefix")
+    @JsonIgnore
     private String showFileNamePrefix;
 
     @OneToMany(mappedBy = "show", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonView(View.Detail.class)
     private Set<Episode> episodes;
 
     @Override
