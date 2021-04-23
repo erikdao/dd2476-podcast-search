@@ -64,6 +64,7 @@ public class ElasticSearchController {
     public ElasticShow findShowById(@PathVariable("id") String id) {
         return elasticShowRepository.findByShowId(id);
     }
+
     @GetMapping("/show/uri/{uri}")
     public ElasticShow findShowByUri(@PathVariable("uri") String uri) {
         return elasticShowRepository.findByShowUri(uri);

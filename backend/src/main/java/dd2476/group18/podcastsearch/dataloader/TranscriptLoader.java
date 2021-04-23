@@ -74,12 +74,15 @@ public class TranscriptLoader {
     }
 
     public AlternativeResultBean loadTranscriptFromJson(String jsonPath) {
+        return this.loadTranscriptFromJson(new File(jsonPath));
+    }
 
+    public AlternativeResultBean loadTranscriptFromJson(File jsonFile) {
         final ObjectMapper objectMapper = new ObjectMapper();
         AlternativeResultBean results = new AlternativeResultBean();
 
         try {
-            results = objectMapper.readValue(new File(jsonPath), new TypeReference<AlternativeResultBean>(){});
+            results = objectMapper.readValue(jsonFile, new TypeReference<AlternativeResultBean>(){});
         } catch (JsonParseException e) {
             System.err.println("JsonParseException " + e.getMessage());
         } catch (JsonMappingException e) {

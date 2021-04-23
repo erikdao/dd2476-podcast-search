@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
@@ -18,6 +19,7 @@ import dd2476.group18.podcastsearch.repositories.ShowRepository;
  * from the `/backend` directory
  */
 @Component
+@Order(2)
 public class DataPreprocessorApplication implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(DataPreprocessorApplication.class);
     private final ShowRepository showRepository;
@@ -32,7 +34,7 @@ public class DataPreprocessorApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // importMetaData(args);
-        importTranscriptData(args);
+        // importTranscriptData(args);
     }
 
     public void importMetaData(String... args) {
