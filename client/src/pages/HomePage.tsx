@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ShowApiService from '../api/show';
-import { PageTitle, SearchBox, ShowList } from '../components';
+import { LoadingIndicator, PageTitle, SearchBox, ShowList } from '../components';
 import { SpotifyLogo } from '../components/SpotifyLogo';
 import { TShow } from '../types';
 
 function HomePage() {
   const [shows, setShows] = useState<TShow[]>();
+  const [loading, setLoading] = useState(true);
 
   const loadShows = async () => {
     try {
@@ -14,6 +15,8 @@ function HomePage() {
       setShows(data);
     } catch (error) {
       console.log("Error while fetching shows list");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -49,7 +52,13 @@ function HomePage() {
                 <div className="flex">
                   <h2 className="text-lg font-medium text-gray-300 text-center w-full mb-6">Here are things you might be interested in</h2>
                 </div>
-                <ShowList items={shows?.slice(0, 12)} />
+                {loading ? (
+                  <div className="flex w-full py-10">
+                    <LoadingIndicator className="text-white h-7 w-8 mx-auto" />
+                  </div>
+                ) : (
+                  <ShowList items={shows?.slice(0, 12)} />
+                )}
               </div>
             </div>
           </main>

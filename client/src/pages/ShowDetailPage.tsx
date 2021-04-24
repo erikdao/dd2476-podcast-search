@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ShowApiService from '../api/show';
-import { PageTitle } from '../components';
+import { LoadingIndicator, PageTitle } from '../components';
 import { TShowDetail } from '../types';
 
 function ShowDetailPage() {
   const { showId } = useParams();
-
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState<TShowDetail>();
 
   const loadShow = async (): Promise<void> => {
@@ -16,6 +16,8 @@ function ShowDetailPage() {
       setShow(data);
     } catch (error) {
       console.log("Error while loading show detail", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -29,7 +31,7 @@ function ShowDetailPage() {
     <>
       <PageTitle title={(show && show.showName) || ""} />
       <div className="min-h-screen bg-gray-900">
-
+        {loading && <LoadingIndicator className="text-white h-6 w-6" />}
       </div>
     </>
   );
