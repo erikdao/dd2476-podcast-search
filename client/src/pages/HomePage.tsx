@@ -27,20 +27,21 @@ function HomePage() {
     <>
       <PageTitle title="Home" />
       <div className="min-h-screen bg-gray-900">
-        <div className="py-10">
-          {/* <header>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-xl font-bold leading-tight text-gray-50">
-                Spotify Podcast Search
-              </h1>
+          <header>
+            <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col items-end">
+              <div className="p-2">
+                <button type="button" className="focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-spotify-green text-gray-50 uppercase text-sm py-2 px-4 font-bold rounded-3xl">
+                  Login with Spotify
+                </button>
+              </div>
             </div>
-          </header> */}
+          </header>
           <main>
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="px-0 py-8">
                 <div className="w-3/5 mx-auto flex items-center content-center mb-4">
                   <SpotifyLogo />
-                  <h1 className="text-7xl font-bold leading-tight text-gray-50">Podcast Search</h1>
+                  <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-7xl font-bold leading-tight text-gray-50">Podcast Search</h1>
                 </div>
                 <SearchBox />
               </div>
@@ -52,7 +53,6 @@ function HomePage() {
               </div>
             </div>
           </main>
-        </div>
     </div>
     </>
   );

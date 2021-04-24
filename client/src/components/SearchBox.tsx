@@ -11,13 +11,13 @@ export function SearchBox() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-fulli px-8">
       <div className="relative w-3/5 mx-auto rounded-3xl flex items-center content-center">
         <input
           type="text"
           name="query"
           id="query"
-          className="focus:ring-green-400 focus:border focus:border-green-500 block pl-3 pr-10 py-2 rounded-3xl text-gray-600 w-full"
+          className="focus:ring-2 focus:outline-none focus:ring-green-500 block pl-3 pr-10 py-2 rounded-3xl text-gray-600 w-full"
           placeholder="Search for podcast by names, transcripts..."
           value={query}
           onChange={handleQueryChanged}
