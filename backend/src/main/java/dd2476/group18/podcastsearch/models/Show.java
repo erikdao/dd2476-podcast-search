@@ -46,6 +46,10 @@ public class Show {
     @JsonView(View.List.class)
     private String showDescription;
 
+    @Column(name = "show_image_url", nullable = true)
+    @JsonView(View.List.class)
+    private String showImageUrl;
+
     @Column(name = "publisher")
     @JsonView(View.List.class)
     private String publisher;
