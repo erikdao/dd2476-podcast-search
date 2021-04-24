@@ -16,5 +16,5 @@ export function ShowListItem(props: IShowListeItemProps) {
       <p className="mt-4 block text-base font-bold text-gray-100 truncate pointer-events-none">{item.showName}</p>
       <p className="mt-1 block text-sm font-medium text-gray-500 truncate pointer-events-none">{item.publisher}</p>
     </li>
-  )
+  );
 }

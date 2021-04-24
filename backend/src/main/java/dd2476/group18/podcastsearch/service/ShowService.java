@@ -2,6 +2,7 @@ package dd2476.group18.podcastsearch.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,15 @@ public class ShowService {
             return pagedResult.getContent();
         } else { 
             return new ArrayList<Show>();
+        }
+    }
+
+    public Show getShowById(String id) {
+        Optional<Show> showQS = showRepository.findById(id);
+        if (!showQS.isPresent()) {
+            return null;
+        } else {
+            return showQS.get();
         }
     }
 }
