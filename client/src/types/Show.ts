@@ -6,6 +6,7 @@ export type TShow = {
   showName: string;
   showUri: string;
   showDescription?: string;
+  showImageUrl?: string;
   language?: string;
   publisher?: string;
 };
