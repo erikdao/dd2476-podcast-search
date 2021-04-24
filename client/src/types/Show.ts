@@ -1,3 +1,5 @@
+import { TEpisode } from "./Episode";
+
 /**
  * Base type representing the Show domain model
  */
@@ -10,3 +12,7 @@ export type TShow = {
   language?: string;
   publisher?: string;
 };
+
+export type TShowDetail = TShow & {
+  episodes: TEpisode[];
+}
