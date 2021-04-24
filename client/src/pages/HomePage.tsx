@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ShowApiService from '../api/show';
-import { PageTitle, ShowList } from '../components';
+import { PageTitle, SearchBox, ShowList } from '../components';
 import { TShow } from '../types';
 
 function HomePage() {
@@ -36,11 +36,14 @@ function HomePage() {
           </header>
           <main>
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+              <div className="px-0 py-8">
+                <SearchBox />
+              </div>
               <div className="px-4 py-8 sm:px-0">
                 <div className="flex">
-                  <h2 className="text-xl font-semibold text-gray-200 text-center w-full mb-6">Here are something you might be interested in</h2>
+                  <h2 className="text-xl font-semibold text-gray-200 text-center w-full mb-6">Here are things you might be interested in</h2>
                 </div>
-                <ShowList items={shows?.slice(0, 8)} />
+                <ShowList items={shows?.slice(0, 12)} />
               </div>
             </div>
           </main>
