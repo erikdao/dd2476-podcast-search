@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Customize scrollbar */
+:root {
+  --scrollbar-vertical-size: 16px;
+  --scrollbar-horizontal-size: 16px;
+}
+
+html {
+  scrollbar-color: hsla(0,0%,100%,.3) transparent;
+}
