@@ -72,7 +72,7 @@ function HomePage() {
                     <LoadingIndicator className="text-white h-7 w-8 mx-auto" />
                   </div>
                 ) : (
-                  <ShowList items={shows?.slice(0, 12)} />
+                  <ShowList items={shows} />
                 )}
               </div>
             </div>
