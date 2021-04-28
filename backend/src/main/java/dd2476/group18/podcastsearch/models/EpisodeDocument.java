@@ -26,7 +26,15 @@ public class EpisodeDocument implements Serializable {
     @Field(name = "show_uri")
     private String showUri;
 
-    private String transcript;
+    private String transcripts;
+
+    public String getTranscripts() {
+        return transcripts;
+    }
+
+    public void setTranscripts(String transcripts) {
+        this.transcripts = transcripts;
+    }
 
     public String getEpisodeId() {
         return episodeId;
@@ -46,10 +54,6 @@ public class EpisodeDocument implements Serializable {
 
     public String getShowUri() {
         return showUri;
-    }
-
-    public String getTranscript() {
-        return transcript;
     }
 
     public String getEpisodeDescription() {
@@ -80,7 +84,4 @@ public class EpisodeDocument implements Serializable {
         this.showUri = showUri;
     }
 
-    public void setTranscript(String transcript) {
-        this.transcript = transcript;
-    }
 }
