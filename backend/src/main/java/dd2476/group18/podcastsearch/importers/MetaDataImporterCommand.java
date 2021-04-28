@@ -2,12 +2,15 @@ package dd2476.group18.podcastsearch.importers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ForkJoinPool;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
+import dd2476.group18.podcastsearch.repositories.ShowDocumentRepository;
 import dd2476.group18.podcastsearch.repositories.ShowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +27,22 @@ import lombok.extern.slf4j.Slf4j;
 public class MetaDataImporterCommand implements CommandLineRunner {
     private final ShowRepository showRepository;
     private final EpisodeRepository episodeRepository;
+    private final ShowDocumentRepository showDocumentRepository;
+    private final EpisodeDocumentRepository episodeDocumentRepository;
 
     @Override
     public void run(String... args) {
         log.info("Importing Show and Episode Metadata...");
-        importMetaData(args); 
+        // importMetaData(args); 
     }
 
     private void importMetaData(String... args) {
         String currentDir = System.getProperty("user.dir");
         Path projectDir = Paths.get(currentDir).getParent();
-        MetaDataLoader loader = new MetaDataLoader(projectDir.toString(), this.showRepository, this.episodeRepository);
+        MetaDataLoader loader = new MetaDataLoader(
+            projectDir.toString(), this.showRepository, this.episodeRepository,
+            this.showDocumentRepository, this.episodeDocumentRepository
+        );
         loader.executePipeline(args);
     }
 }

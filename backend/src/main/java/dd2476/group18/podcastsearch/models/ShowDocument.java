@@ -2,74 +2,34 @@ package dd2476.group18.podcastsearch.models;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import lombok.Builder;
+import lombok.Data;
 
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Document(indexName = "shows")
+@Data
+@Builder
+@Document(indexName = "shows", createIndex = true)
 public class ShowDocument implements Serializable {
     @Id
     @Field(name = "id")
-    private String showId;
+    private String id;
 
+    @Field(name = "language", type = FieldType.Keyword)
     private String language;
 
+    @Field(name = "publisher", type = FieldType.Keyword)
     private String publisher;
 
-    @Field(name = "show_name")
+    @Field(name = "show_name", type = FieldType.Text)
     private String showName;
 
-    @Field(name = "show_uri")
+    @Field(name = "show_uri", type = FieldType.Keyword)
     private String showUri;
 
-    @Field(name = "show_description")
+    @Field(name = "show_description", type = FieldType.Text)
     private String showDescription;
-
-    public String getShowId() {
-        return showId;
-    }
-
-    public void setShowId(String showId) {
-        this.showId = showId;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
-
-    public String getShowName() {
-        return showName;
-    }
-
-    public void setShowName(String showName) {
-        this.showName = showName;
-    }
-
-    public String getShowUri() {
-        return showUri;
-    }
-
-    public void setShowUri(String showUri) {
-        this.showUri = showUri;
-    }
-
-    public String getShowDescription() {
-        return showDescription;
-    }
-
-    public void setShowDescription(String showDescription) {
-        this.showDescription = showDescription;
-    }
 }

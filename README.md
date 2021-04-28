@@ -9,6 +9,12 @@ Contributors:
 - William Lindblom
 - Xitao Mo
 
+## Note
+[04-23-2021] As we have upgraded our codebase to use Java as the main language for the backend and data import, you need to perform the following steps to properly setup your local data.
+- Make sure you've run `docker-compose up -d` successfully
+- Run `./clean.sh`: this will delete the old database and create a new one, and it'll also delete the index
+- Run `cd backend && ./run.sh` to start the backend server
+
 ## Project structure
 
 _Note: The structure is pretty much a ongoing work, subjected to changes as the project progresses._
