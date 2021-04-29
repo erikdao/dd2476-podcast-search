@@ -24,13 +24,17 @@ import org.springframework.stereotype.Service;
 
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
+import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
+import dd2476.group18.podcastsearch.searchers.QueryTerms;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class EpisodeDocumentService {
-    final String[] includes = new String[]{};
-    final String[] excludes = new String[]{"transcripts"};
+    final String[] includes = new String[]{"id"};
+    final String[] excludes = new String[]{};
     final SourceFilter sourceFilter = new FetchSourceFilter(includes, excludes);
     private final EpisodeDocumentRepository episodeDocumentRepository;
 
@@ -75,7 +79,7 @@ public class EpisodeDocumentService {
     //     return searchHits.getSearchHits().stream().map(SearchHit::getContent).collect(Collectors.toList());
     // }
 
-    public List<EpisodeDocument> phraseTranscriptSearch(String query) throws IOException {
+    public List<MatchedEpisodeDocument> phraseTranscriptSearch(String query) throws IOException {
         SearchRequest searchRequest = new SearchRequest("episodes");
         // Define a match phrase query, exlude `transcript` field from the result
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -96,17 +100,23 @@ public class EpisodeDocumentService {
 
         SearchResponse response = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHit[] hits = response.getHits().getHits();
-        int hitCount = 0;
+
+        List<MatchedEpisodeDocument> results = new ArrayList<>();
+
         for (SearchHit hit: hits) {
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             String id = (String) sourceAsMap.get("id");
-            System.out.println(++hitCount + " >> " + id);
+            MatchedEpisodeDocument episode = new MatchedEpisodeDocument();
+            episode.setEpisodeId(id);
+            episode.setQueryTerms(new ArrayList<>());
 
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             HighlightField highlightField = highlightFields.get("transcript");
             Text[] fragments = highlightField.fragments();
-            System.out.println("Number of fragments: " + fragments.length);
-            int count = 0;
+
+            int order = 0;
+            QueryTerms queryTerms = new QueryTerms();
+
             for (Text text: fragments) {
                 Pattern p = Pattern.compile("<em>(.+?)</em>");
                 Matcher matcher = p.matcher(text.toString());
@@ -115,18 +125,16 @@ public class EpisodeDocumentService {
                 while (matcher.find()) {
                     token.add((String)matcher.group(1));
                 }
+                queryTerms.setOrder(++order);
+                queryTerms.setTerms(token);
 
-                count++;
-                System.out.print(count + " | ");
-                for (String t: token) {
-                    System.out.print(t + ", ");
-                }
-                System.out.println();
+                episode.getQueryTerms().add(queryTerms);
             }
-            System.out.println("-------------------------------------------------");
+
+            results.add(episode);
         }
 
-        return new ArrayList<EpisodeDocument>();
+        return results;
     }
 
 }

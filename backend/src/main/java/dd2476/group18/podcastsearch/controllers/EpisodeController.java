@@ -15,6 +15,7 @@ import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.rest.EpisodeSearchRequestBody;
+import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
 import dd2476.group18.podcastsearch.service.EpisodeDocumentService;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,9 @@ public class EpisodeController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     public List<Episode> searchEpisode(@RequestBody EpisodeSearchRequestBody body) {
         // Step 1: search with elastic search
+        List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
         try {
-            List<EpisodeDocument> episodeDocuments = episodeDocumentService.phraseTranscriptSearch(body.getQuery());
+            episodeDocuments = episodeDocumentService.phraseTranscriptSearch(body.getQuery());
         } catch (IOException e) {
             e.printStackTrace();
         }

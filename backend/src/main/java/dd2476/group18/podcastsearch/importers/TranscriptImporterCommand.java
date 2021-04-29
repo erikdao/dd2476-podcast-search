@@ -2,10 +2,13 @@ package dd2476.group18.podcastsearch.importers;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,23 +34,31 @@ public class TranscriptImporterCommand implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // log.info("Importing Episodes' transcripts...");
-        // importTranscript(args);
+        log.info("Importing Episodes' transcripts...");
+        importTranscript(args);
     }
 
     private void importTranscript(String... args) {
         Path projectDir = Paths.get(System.getProperty("user.dir")).getParent();
         Path dataDir = Paths.get(projectDir.toString(), "data", "podcasts-transcript", "spotify-podcasts-2020", "podcasts-transcripts");
-    
-        AtomicReference<Long> counter = new AtomicReference<>();
-        counter.set(0L);
+        
+        Map<String, Long> counters = new ConcurrentHashMap<>();
 
         Thread summary = new Thread(() -> {
             Instant start = Instant.now();
             while (!workerPool.isShutdown()) {
-                // if (counter.get() % 10000L == 0) {
-                //     log.info("Persisted transcript for " + counter.get() + " episodes");
-                // }
+                try {
+                    Long sum = 0L;
+                    for (Map.Entry<String, Long> counter: counters.entrySet()) {
+                        sum += counter.getValue();
+                    }
+                    Instant intermediate = Instant.now();
+                    Duration elapsed = Duration.between(start, intermediate);
+                    log.info("Complete " + sum + " episodes, time elapsed: " + elapsed.toMinutes() + " mins");
+                    Thread.sleep(10000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             Instant end = Instant.now();
             Duration timeElapsed = Duration.between(start, end);
@@ -67,7 +78,9 @@ public class TranscriptImporterCommand implements CommandLineRunner {
                         TranscriptLoader loader = new TranscriptLoader(episodeRepository, episodeDocumentRepository);
                         AlternativeResultBean transcriptBean = loader.loadTranscriptFromJson(p.toString());
                         loader.persistTranscript(transcriptBean, episodeId);
-                        counter.set(counter.get() + 1);
+
+                        String key = Thread.currentThread().getName();
+                        counters.put(key, counters.getOrDefault(key, 0L) + 1);
                     });
             } catch (IOException e) {
                 e.printStackTrace();

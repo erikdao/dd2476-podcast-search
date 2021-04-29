@@ -1,6 +1,8 @@
 package dd2476.group18.podcastsearch.importers;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -58,7 +60,7 @@ public class TranscriptLoader {
         Episode episode = episodeRS.get();
 
         results.combineTranscriptsAndWords();
-        persistTranscriptToDb(results, episode); 
+        persistTranscriptToDb(results, episode);
         updateEpisodeDocumentTranscript(results, episode);
         results.reset();
     }
