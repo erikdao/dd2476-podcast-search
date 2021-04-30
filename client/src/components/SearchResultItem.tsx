@@ -23,7 +23,7 @@ export function SearchResultItem(props: ISearchResultItemProps) {
       </h2>
       <div className="flex-0 flex-shrink-0">
         <div className="text-sm text-gray-700 rounded bg-green-50 px-2 mb-2">0:45 - 1:12</div>
-        <div className="text-sm text-gray-700 rounded bg-green-50 px-2">Score: 4.576</div>
+        <div className="text-sm text-gray-700 rounded bg-green-50 px-2">Score: {item.score}</div>
       </div>
     </div>
     <h3 className="text-base py-2 text-gray-700">Podcast: {item.show?.showName}</h3>

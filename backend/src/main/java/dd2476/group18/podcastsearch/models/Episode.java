@@ -1,5 +1,7 @@
 package dd2476.group18.podcastsearch.models;
 
+import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -32,15 +35,15 @@ import lombok.NoArgsConstructor;
 public class Episode {
     @Id
     @Column(name = "id", length = 50)
-    @JsonView(View.List.class)
+    @JsonView(View.Minimal.class)
     private String id;
 
     @Column(name = "episode_uri")
-    @JsonView(View.List.class)
+    @JsonView(View.Minimal.class)
     private String episodeUri;
 
     @Column(name = "episode_name")
-    @JsonView(View.List.class)
+    @JsonView(View.Minimal.class)
     private String episodeName;
 
     @Column(name = "episode_description", columnDefinition = "TEXT")
@@ -56,12 +59,17 @@ public class Episode {
 
     @ManyToOne
     @JoinColumn(name = "show_id", nullable = false)
-    @JsonView(View.NestedList.class)
+    @JsonIgnore
     private Show show;
 
     @OneToOne(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Transcript transcript;
+
+    // Properties used for search result
+    @JsonView(View.List.class)
+    @Transient
+    private float score;
 
     @Override
     public String toString() {

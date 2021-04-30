@@ -31,15 +31,15 @@ import lombok.NoArgsConstructor;
 public class Show {
     @Id
     @Column(name = "id", length = 50)
-    @JsonView(View.NestedList.class)
+    @JsonView(View.Minimal.class)
     private String id;
 
     @Column(name = "show_uri")
-    @JsonView(View.NestedList.class)
+    @JsonView(View.List.class)
     private String showUri;
 
     @Column(name = "show_name")
-    @JsonView(View.NestedList.class)
+    @JsonView(View.Minimal.class)
     private String showName;
 
     @Column(name = "show_description", columnDefinition = "TEXT")
@@ -47,7 +47,7 @@ public class Show {
     private String showDescription;
 
     @Column(name = "show_image_url", nullable = true)
-    @JsonView(View.List.class)
+    @JsonView(View.Minimal.class)
     private String showImageUrl;
 
     @Column(name = "publisher")

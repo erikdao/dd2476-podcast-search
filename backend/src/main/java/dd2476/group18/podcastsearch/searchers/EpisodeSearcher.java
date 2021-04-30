@@ -3,7 +3,6 @@ package dd2476.group18.podcastsearch.searchers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +30,14 @@ public class EpisodeSearcher {
             e.printStackTrace();
         }
 
-        List<String> episodeIds = episodeDocuments
+        List<Episode> episodes = episodeDocuments
             .stream()
-            .map(MatchedEpisodeDocument::getEpisodeId)
+            .map((MatchedEpisodeDocument doc) -> {
+                Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
+                episode.setScore(doc.getScore());
+                return episode;
+            })
             .collect(Collectors.toList());
-
-        List<Episode> episodes = episodeRepository.findByIdIn(episodeIds);
         return episodes;
     }
 }
