@@ -32,7 +32,7 @@ public class MetaDataImporterCommand implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Importing Show and Episode Metadata...");
+        // log.info("Importing Show and Episode Metadata...");
         // importMetaData(args); 
     }
 
