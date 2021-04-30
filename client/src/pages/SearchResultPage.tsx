@@ -32,6 +32,7 @@ function SearchResultPage() {
   const searchEpisodes = async (): Promise<void> => {
     setSearching(true);
     setEpisodes([]);
+    setSelectedEpisode(undefined);
     try {
       const requestBody: TEpisodeSearchBody = { query, type };
       const response = await EpisodeApiService.search(requestBody);
@@ -85,6 +86,11 @@ function SearchResultPage() {
             {/* End main area */}
           </main>
           <aside className="w-full flex-1 flex-shrink-0 border-l p-6 overflow-x-hidden overflow-y-auto">
+            {!selectedEpisode && (
+              <div>
+                <p className="text-center text-gray-600">No episode is selected</p>
+              </div>
+            )}
             {selectedEpisode && <SearchItemDetail item={selectedEpisode} query={query} /> }
           </aside>
         </div>
