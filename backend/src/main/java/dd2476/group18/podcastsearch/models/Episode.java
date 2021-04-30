@@ -149,12 +149,19 @@ public class Episode {
                                 .filter(token -> token.getWord().contains(firstTerm))
                                 .findFirst()
                                 .get();
-        
+        startToken.setHighlight(true);
+
         // Get all word tokens that are between the startToken and 1 minute after that
         List<WordToken> tokensInClip = this.wordTokens.stream()
             .filter(token -> {
                 double startTime = token.getStartTime();
                 return (startTime >= startToken.getStartTime() - 1.0) && (startTime <= startToken.getStartTime() + 60.0);
+            })
+            .map(token -> {
+                if (terms.getTerms().contains(token.getWord())) {
+                    token.setHighlight(true);
+                }
+                return token;
             })
             .collect(Collectors.toList());
         Collections.sort(tokensInClip);
