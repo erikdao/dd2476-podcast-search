@@ -1,5 +1,6 @@
 import { ESearchType } from "./common";
 import { TShow } from "./Show";
+import { WordToken } from "./WordToken";
 
 /**
  * Base type representing the Episode domain model
@@ -27,4 +28,5 @@ export type TEpisodeSearchResult = {
   episodeDescription: string;
   duration: number;
   show?: TShow;
+  clips?: WordToken[];
 }

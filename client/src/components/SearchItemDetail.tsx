@@ -1,4 +1,6 @@
+import clsx from "clsx";
 import { ICommon, TEpisodeSearchResult } from "../types";
+import { WordToken } from "../types/WordToken";
 
 interface ISearchItemDetailProps extends ICommon {
   item: TEpisodeSearchResult;
@@ -38,7 +40,11 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
           </div>
         </div>
         <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 items-start">
-          <span>Why</span> <span>do</span> <span className="px-2 rounded bg-spotify-green text-gray-50">Germans</span> <span className="px-2 rounded bg-spotify-green text-gray-50">loves</span> <span className="px-2 rounded bg-spotify-green text-gray-50">American</span> <span>is</span> <span>a</span>
+          {item.clips && item.clips.length > 0 && item.clips.map((wordToken: WordToken, index: number) => (
+            <span key={index} className={clsx(
+              wordToken.highlight ? "px-2 rounded bg-spotify-green text-gray-50" : ""
+            )}>{wordToken.word}</span>
+          ))}
         </div>
       </div>
     </>
