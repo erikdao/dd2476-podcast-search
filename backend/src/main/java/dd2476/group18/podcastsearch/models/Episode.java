@@ -143,22 +143,31 @@ public class Episode {
             Collections.sort(this.wordTokens);
         }
 
-        String firstTerm = terms.getTerms().get(0);
-        // Get the first work token corresponding to the term
-        WordToken startToken = this.wordTokens.stream()
-                                .filter(token -> token.getWord().contains(firstTerm))
-                                .findFirst()
-                                .get();
-        startToken.setHighlight(true);
+        // Get a list of all tokens in this episode;
+        List<String> allTokens = this.wordTokens.stream().map(
+            token -> token.getWord().toLowerCase()
+        ).collect(Collectors.toList());
+
+        List<String> normalizedTerms = terms.getTerms().stream().map(
+            term -> term.toLowerCase()
+        ).collect(Collectors.toList());
+
+        // This is only true for phrase query
+        // Find the index of the `terms` which is a sublist of all tokens 
+        int termsIndex = Collections.indexOfSubList(allTokens, normalizedTerms);
+
+        // Building the clip from list of tokens
+        int startIndex = termsIndex - 3 >= 0 ? termsIndex - 3 : termsIndex;
+        WordToken startToken = this.wordTokens.get(startIndex);
 
         // Get all word tokens that are between the startToken and 1 minute after that
         List<WordToken> tokensInClip = this.wordTokens.stream()
             .filter(token -> {
                 double startTime = token.getStartTime();
-                return (startTime >= startToken.getStartTime() - 1.0) && (startTime <= startToken.getStartTime() + 120.0);
+                return (startTime >= startToken.getStartTime()) && (startTime <= startToken.getStartTime() + 60.0);
             })
             .map(token -> {
-                if (terms.getTerms().contains(token.getWord())) {
+                if (normalizedTerms.contains(token.getWord().toLowerCase())) {
                     token.setHighlight(true);
                 }
                 return token;

@@ -35,10 +35,12 @@ public class EpisodeSearcher {
             .map((MatchedEpisodeDocument doc) -> {
                 Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
                 episode.setScore(doc.getScore());
-                for (QueryTerms terms: doc.getQueryTerms()) {
-                    episode.buildClipForTerms(terms);
-                    break;
-                }
+                QueryTerms firstTerms = doc.getQueryTerms().stream().filter(qt -> qt.getOrder() == 1).findFirst().get();
+                episode.buildClipForTerms(firstTerms);
+                // for (QueryTerms terms: doc.getQueryTerms()) {
+                //     episode.buildClipForTerms(terms);
+                //     break;
+                // }
                 return episode;
             })
             .collect(Collectors.toList());
