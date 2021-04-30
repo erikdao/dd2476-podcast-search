@@ -16,7 +16,7 @@ function getReadableTime(time: number) {
   } else {
     const minute = Math.floor(time / 60.0);
     const second = time - minute * 60;
-    return `${minute}:${Math.round(second)}`;
+    return second < 10 ? `${minute}:0${Math.round(second)}` : `${minute}:${Math.round(second)}`;
   }
 }
 
