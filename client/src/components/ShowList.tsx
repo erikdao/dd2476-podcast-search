@@ -11,7 +11,7 @@ export function ShowList(props: IShowListProps) {
 
   return (
     <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 sm:gap-x-6 lg:grid-cols-6 xl:gap-x-8">
-      {(items || []).map((show: TShow) => (
+      {(items?.slice(0, 12) || []).map((show: TShow) => (
         <ShowListItem key={show.id} item={show} /> 
       ))}
     </ul>    

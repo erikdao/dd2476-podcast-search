@@ -3,3 +3,8 @@ export interface IClassName {
 }
 
 export interface ICommon extends IClassName {}
+
+export enum ESearchType {
+  PHRASE = 'phrase',
+  MULTIWORD = 'multiword'
+}

@@ -17,21 +17,15 @@ public class RestClientConfig extends AbstractElasticsearchConfiguration {
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
-
-        // final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-        //         .connectedTo("192.168.192.91:9200")
-        //         .build();
-
-        // return RestClients.create(clientConfiguration).rest();
         RestClientBuilder builder = RestClient.builder(
-        new HttpHost("192.168.192.91", 9200))
+        new HttpHost("localhost", 9200))
         .setHttpClientConfigCallback(new HttpClientConfigCallback() {
             @Override
             public HttpAsyncClientBuilder customizeHttpClient(
                     HttpAsyncClientBuilder httpClientBuilder) {
                 return httpClientBuilder.setDefaultIOReactorConfig(
                     IOReactorConfig.custom()
-                        .setIoThreadCount(196)
+                        .setIoThreadCount(4)
                         .build());
             }
         });

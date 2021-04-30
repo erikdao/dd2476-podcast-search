@@ -58,10 +58,10 @@ function HomePage() {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="px-0 py-8">
                 <div className="w-3/5 mx-auto flex items-center content-center mb-4">
-                  <SpotifyLogo />
+                  <SpotifyLogo className="text-gray-50"/>
                   <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-7xl font-bold leading-tight text-gray-50">Podcast Search</h1>
                 </div>
-                <SearchBox onSubmit={handleSearchSubmit} />
+                <SearchBox onSubmit={handleSearchSubmit} inputClassName="mx-auto" isCenter={true} />
               </div>
               <div className="px-4 py-8 sm:px-0">
                 <div className="flex">

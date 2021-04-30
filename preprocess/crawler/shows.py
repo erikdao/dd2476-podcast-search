@@ -7,8 +7,7 @@ import typing
 import requests
 from peewee import *
 
-# OAUTH_TOKEN = "BQAqB6DvsiXZ4SIf9mspsh-1ifSJf7bPW3OCaHUDCvSpLLSLCBBG7UQ24un_ELfCYdUYjIaO6wk5C4NVWap_M4p3wZKdrEBAc0oCBzoNpxqXpXs5s0mc-vGk2Jk-ndEC3X7inX9u7x3aKpMnrkgsAkI9IDC7pwUMJP9XmbxY0S6ThwedwnxaOOg_15FS"
-OAUTH_TOKEN = "BQADPRie7NJUMSr81fMv_OGF-6692NhGoP1u4qxigtaNSmLY6IANYrRkMjyXIVjs4la1NKVq67irvDM0VC2BJDDLH7vP-3pWTZBNcMUXQyNoyhwaSfarPXe7KryNdJ6NJJP8xgRKlAZBc8D0Jc_ZuGkKlyoGt3trXH68YzpCFx7O0wvu_ehqqZM6fbkm"
+OAUTH_TOKEN = "BQCqdwpPrNXF-3W5oDw8y2sR-jXWb01Br3pmO7JxRRhkpmHt4p00Loj6YVgfUlI3sxni7yTYyNtUcKDVXlDCM08cMAp3oTSdrV3j92kePSp01VCrfkwUH9Ru7U4SqLavoeRQMX7469QAXND7cF3KEQgXOKk95SWxI7EvMIQrwud81R2DsqetDKP4sQf1"
 
 DB = {
     'NAME': 'podcast',
@@ -16,7 +15,7 @@ DB = {
     'PASSWORD': 'postgres'
 }
 db = PostgresqlDatabase(DB['NAME'], user=DB['USER'], password=DB['PASSWORD'],
-                        host='127.0.0.1', port=5432)
+                        host='localhost', port=5432)
 
 
 def get_show(show_id: str) -> typing.Any:

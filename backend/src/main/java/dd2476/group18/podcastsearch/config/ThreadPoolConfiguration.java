@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Bean;
 public class ThreadPoolConfiguration {
     @Bean
     ForkJoinPool workerPool() {
-        return new ForkJoinPool(196);
+        return new ForkJoinPool();
     }
 }
