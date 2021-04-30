@@ -6,6 +6,7 @@ package dd2476.group18.podcastsearch.views;
  * Detail: return JSON will include some more detailed attributes
  */
 public class View {
-    public static class List {}
+    public static class NestedList {}
+    public static class List extends NestedList{}
     public static class Detail extends List {}
 }

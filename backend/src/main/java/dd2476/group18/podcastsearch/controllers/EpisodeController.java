@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import dd2476.group18.podcastsearch.models.Episode;
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.rest.EpisodeSearchRequestBody;
+import dd2476.group18.podcastsearch.searchers.EpisodeSearcher;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
 import dd2476.group18.podcastsearch.service.EpisodeDocumentService;
 import dd2476.group18.podcastsearch.views.View;
@@ -24,20 +27,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/episodes")
 @RequiredArgsConstructor
 public class EpisodeController {
-    final EpisodeRepository episodeRepository;
-    private final EpisodeDocumentService episodeDocumentService;
+    @Autowired
+    private final EpisodeSearcher episodeSearcher;
 
     @JsonView(View.List.class)
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping(value = "/search", consumes = "application/json", produces = "application/json")
     public List<Episode> searchEpisode(@RequestBody EpisodeSearchRequestBody body) {
-        // Step 1: search with elastic search
-        List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
-        try {
-            episodeDocuments = episodeDocumentService.phraseTranscriptSearch(body.getQuery());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Step 2: Post-process those documents
-        return new ArrayList<Episode>();
+        List<Episode> episodes = episodeSearcher.searchEpisodeByTranscript(body.getQuery());
+        return episodes;
     }
 }

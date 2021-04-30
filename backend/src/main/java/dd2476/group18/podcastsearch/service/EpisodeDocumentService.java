@@ -36,6 +36,7 @@ public class EpisodeDocumentService {
     final String[] includes = new String[]{"id"};
     final String[] excludes = new String[]{};
     final SourceFilter sourceFilter = new FetchSourceFilter(includes, excludes);
+    @Autowired
     private final EpisodeDocumentRepository episodeDocumentRepository;
 
     @Autowired
@@ -108,6 +109,7 @@ public class EpisodeDocumentService {
             String id = (String) sourceAsMap.get("id");
             MatchedEpisodeDocument episode = new MatchedEpisodeDocument();
             episode.setEpisodeId(id);
+            episode.setScore(hit.getScore());
             episode.setQueryTerms(new ArrayList<>());
 
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();

@@ -9,5 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchedEpisodeDocument {
     private String episodeId;
+    private float score;
     private List<QueryTerms> queryTerms;
+
+    public String getEpisodeId() {
+        return episodeId;
+    }
 }

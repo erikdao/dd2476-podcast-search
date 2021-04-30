@@ -56,7 +56,7 @@ public class Episode {
 
     @ManyToOne
     @JoinColumn(name = "show_id", nullable = false)
-    @JsonIgnore
+    @JsonView(View.NestedList.class)
     private Show show;
 
     @OneToOne(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
