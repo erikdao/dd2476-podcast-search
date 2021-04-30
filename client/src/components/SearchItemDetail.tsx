@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { ICommon, TEpisodeSearchResult } from "../types";
 import { WordToken } from "../types/WordToken";
+import { ShowImagePlaceHolder } from "./ShowImagePlaceholder";
 
 interface ISearchItemDetailProps extends ICommon {
   item: TEpisodeSearchResult;
@@ -42,7 +43,11 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
       {/* Meta data */}
       <div className="flex items-start space-x-4">
         <div className="w-40 h-40 flex-0 flex-shrink-0">
-          <img src={`${item.show?.showImageUrl}`} alt="" className="h-full w-full border-transparent rounded-md shadow-xl" />
+          {item.show && !item.show.showImageUrl ? (
+            <ShowImagePlaceHolder className="bg-gray-900 block w-full h-full rounded-md border-transparent shadow-xl" />
+          ) : (
+            <img src={`${item.show?.showImageUrl}`} alt="" className="h-full w-full border-transparent rounded-md shadow-xl" />
+          )}
         </div>
         <div>
           <p className="text-sm uppercase font-semibold text-gray-700 mb-3">Podcast episode</p>
