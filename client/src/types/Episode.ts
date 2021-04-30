@@ -18,3 +18,13 @@ export type TEpisodeSearchBody = {
   query: string | null;
   type: ESearchType;
 }
+
+export type TEpisodeSearchResult = {
+  id: string;
+  score?: number;
+  episodeName: string;
+  episodeUri: string;
+  episodeDescription: string;
+  duration: number;
+  show?: TShow;
+}
