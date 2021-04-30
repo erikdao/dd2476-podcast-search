@@ -1,3 +1,4 @@
+import { ESearchType } from "./common";
 import { TShow } from "./Show";
 
 /**
@@ -11,4 +12,9 @@ export type TEpisode = {
   duration: number;
   show?: TShow;
   transcript?: string;
+}
+
+export type TEpisodeSearchBody = {
+  query: string | null;
+  type: ESearchType;
 }

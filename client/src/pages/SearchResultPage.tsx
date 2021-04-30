@@ -1,10 +1,11 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
+import EpisodeApiService from '../api/episode';
 
 import { LoadingIndicator, PageTitle, QueryTypeSelect, SearchBox, SearchResultItem } from '../components';
 import { SpotifyLogo } from '../components/SpotifyLogo';
-import { ESearchType } from '../types';
+import { ESearchType, TEpisodeSearchBody } from '../types';
 
 function getQueryFromUrl(url: string): string | null {
   const urlParams = new URLSearchParams(url);
@@ -13,6 +14,7 @@ function getQueryFromUrl(url: string): string | null {
 
 function SearchResultPage() {
   const location = useLocation();
+  const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState(getQueryFromUrl(location.search))
   const [type, setType] = useState<ESearchType>(ESearchType.PHRASE);
 
@@ -22,8 +24,25 @@ function SearchResultPage() {
     setQuery(q);
   }
 
+  const searchEpisodes = async (): Promise<void> => {
+    setSearching(true);
+    try {
+      const requestBody: TEpisodeSearchBody = { query, type };
+      const response = await EpisodeApiService.search(requestBody);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSearching(false);
+    }
+  }
+
   useEffect(() => {
-    console.log('query', query);
+    (async function useEffectSearchEpisodes() {
+      if (query) {
+        await searchEpisodes();
+      }
+    })();
   }, [query]);
 
   return (

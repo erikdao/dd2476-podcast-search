@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { TShow } from '../types';
 import LazyLoad from 'react-lazyload';
 
