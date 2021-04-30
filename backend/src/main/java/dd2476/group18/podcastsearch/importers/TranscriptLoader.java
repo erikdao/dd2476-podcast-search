@@ -58,7 +58,7 @@ public class TranscriptLoader {
         Episode episode = episodeRS.get();
 
         results.combineTranscriptsAndWords();
-        persistTranscriptToDb(results, episode); 
+        // persistTranscriptToDb(results, episode); 
         updateEpisodeDocumentTranscript(results, episode);
         results.reset();
     }

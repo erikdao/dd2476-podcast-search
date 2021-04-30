@@ -66,7 +66,7 @@ public class Show {
     @JsonIgnore
     private String showFileNamePrefix;
 
-    @OneToMany(mappedBy = "show", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "show", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonView(View.Detail.class)
     private Set<Episode> episodes;
 
