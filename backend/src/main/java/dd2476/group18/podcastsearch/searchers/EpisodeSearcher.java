@@ -35,6 +35,10 @@ public class EpisodeSearcher {
             .map((MatchedEpisodeDocument doc) -> {
                 Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
                 episode.setScore(doc.getScore());
+                for (QueryTerms terms: doc.getQueryTerms()) {
+                    episode.buildClipForTerms(terms);
+                    break;
+                }
                 return episode;
             })
             .collect(Collectors.toList());

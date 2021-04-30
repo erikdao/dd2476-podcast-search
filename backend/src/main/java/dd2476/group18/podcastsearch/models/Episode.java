@@ -1,6 +1,8 @@
 package dd2476.group18.podcastsearch.models;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import dd2476.group18.podcastsearch.searchers.QueryTerms;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,9 +60,9 @@ public class Episode {
     @Column(name = "episode_filename_prefix")
     private String episodeFilenamePrefix;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "show_id", nullable = false)
-    @JsonIgnore
+    @JsonView(View.List.class)
     private Show show;
 
     @OneToOne(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -70,6 +73,14 @@ public class Episode {
     @JsonView(View.List.class)
     @Transient
     private float score;
+
+    @JsonIgnore
+    @Transient
+    private List<WordToken> wordTokens;
+
+    @JsonView(View.List.class)
+    @Transient
+    private List<WordToken> clips;
 
     @Override
     public String toString() {
@@ -124,5 +135,30 @@ public class Episode {
                 .build();
         }
         return this.createEpisodeDocument();
+    }
+
+    public void buildClipForTerms(QueryTerms terms) {
+        if (this.wordTokens == null || this.wordTokens.size() == 0) {
+            this.wordTokens = this.getTranscript().getWordTokens();
+            Collections.sort(this.wordTokens);
+        }
+
+        String firstTerm = terms.getTerms().get(0);
+        // Get the first work token corresponding to the term
+        WordToken startToken = this.wordTokens.stream()
+                                .filter(token -> token.getWord().contains(firstTerm))
+                                .findFirst()
+                                .get();
+        
+        // Get all word tokens that are between the startToken and 1 minute after that
+        List<WordToken> tokensInClip = this.wordTokens.stream()
+            .filter(token -> {
+                double startTime = token.getStartTime();
+                return (startTime >= startToken.getStartTime() - 1.0) && (startTime <= startToken.getStartTime() + 60.0);
+            })
+            .collect(Collectors.toList());
+        Collections.sort(tokensInClip);
+        
+        this.setClips(tokensInClip);
     }
 }

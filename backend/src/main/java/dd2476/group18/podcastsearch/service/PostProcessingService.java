@@ -1,15 +1,11 @@
-package dd2476.group18.podcastsearch.controllers;
+package dd2476.group18.podcastsearch.service;
 
 import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
 
-import org.elasticsearch.ResourceNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dd2476.group18.podcastsearch.models.PostProcessResult;
@@ -19,11 +15,8 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.models.Transcript;
 import dd2476.group18.podcastsearch.models.WordToken;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
-import dd2476.group18.podcastsearch.service.EpisodeDocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.Data;
-
-import org.springframework.web.bind.annotation.*;
 
 @Data
 @RequiredArgsConstructor
