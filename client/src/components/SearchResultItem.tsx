@@ -1,6 +1,6 @@
 export function SearchResultItem() {
   return (
-  <div className="p-3 border rounded-md cursor-pointer hover:border-green-500 transition-all">
+  <div className="p-3 border rounded-md cursor-pointer hover:border-green-500 hover:shadow-sm transition-all">
     <div className="flex space-x-2 items-start">
       <h2 className="text-lg font-semibold flex-1 text-green-600">We Are Always The Mainstream Media's Target and Not Other Groups</h2>
       <div className="flex-0 flex-shrink-0">

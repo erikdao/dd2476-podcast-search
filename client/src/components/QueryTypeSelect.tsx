@@ -32,13 +32,13 @@ export function QueryTypeSelect(props: IQueryTypeSelectProps) {
             >
               <Listbox.Options
                 static
-                className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                className="absolute mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
               >
                 <Listbox.Option
                   key={ESearchType.PHRASE}
                   value={ESearchType.PHRASE}
                   className={({ active }) => clsx(
-                    active ? 'text-white bg-spotify-green' : 'text-gray-900',
+                    active ? 'text-white bg-spotify-green' : 'text-gray-900 bg-white',
                     "cursor-default select-none relative py-2 pl-8 pr-4"
                   )}
                 >
@@ -62,7 +62,7 @@ export function QueryTypeSelect(props: IQueryTypeSelectProps) {
                   key={ESearchType.MULTIWORD}
                   value={ESearchType.MULTIWORD}
                   className={({ active }) => clsx(
-                    active ? 'text-white bg-spotify-green' : 'text-gray-900',
+                    active ? 'text-white bg-spotify-green' : 'text-gray-900 bg-white',
                     "cursor-default select-none relative py-2 pl-8 pr-4"
                   )}
                 >
