@@ -7,9 +7,36 @@ interface ISearchItemDetailProps extends ICommon {
   query: string | null;
 }
 
+function getReadableTime(time: number) {
+  if (time < 60.0) {
+    return `0:${Math.floor(time)}`;  
+  } else if (time == 60.0) {
+    return `1:00`;
+  } else {
+    const minute = Math.floor(time / 60.0);
+    const second = time - minute * 60;
+    return `${minute}:${Math.round(second)}`;
+  }
+}
+
+function getClipTimes(item: TEpisodeSearchResult) {
+  if (!item.clips || (item.clips && !item.clips.length)) {
+    return { clipStart: null, clipEnd: null};
+  }
+  const clips: WordToken[] = item.clips;
+  const firstToken = clips[0];
+  const lastToken = clips.slice(-1)[0];
+  return {
+    clipStart: getReadableTime(firstToken.startTime),
+    clipEnd: getReadableTime(lastToken.endTime)
+  }
+}
+
 export function SearchItemDetail(props: ISearchItemDetailProps) {
   const { item, query } = props;
-  console.log(item.id);
+
+  const { clipStart, clipEnd } = getClipTimes(item);
+
   return (
     <>
       {/* Meta data */}
@@ -36,7 +63,7 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
             <span className="font-bold text-gray-800">Clip contains keyword: <span className="px-2 py-1 rounded truncate">{query}</span></span>
           </div>
           <div className="flex items-end flex-shrink-0">
-            <span className="px-2 py-1 rounded bg-green-100">0:45 - 1:12</span>
+            <span className="px-2 py-1 rounded bg-green-100">{clipStart} - {clipEnd}</span>
           </div>
         </div>
         <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 items-start">

@@ -155,7 +155,7 @@ public class Episode {
         List<WordToken> tokensInClip = this.wordTokens.stream()
             .filter(token -> {
                 double startTime = token.getStartTime();
-                return (startTime >= startToken.getStartTime() - 1.0) && (startTime <= startToken.getStartTime() + 60.0);
+                return (startTime >= startToken.getStartTime() - 1.0) && (startTime <= startToken.getStartTime() + 120.0);
             })
             .map(token -> {
                 if (terms.getTerms().contains(token.getWord())) {
