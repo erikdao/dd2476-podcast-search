@@ -57,8 +57,8 @@ function SearchResultPage() {
   return (
     <>
       <PageTitle title={`Search results for ${query}`} />
-      <div className="min-h-screen bg-white flex flex-col overflow-hidden">
-        <header className="w-full p-4 flex border-b flex-0 fixed">
+      <div className="h-screen bg-white flex flex-col overflow-hidden">
+        <header className="w-full p-4 flex border-b flex-0 flex-shrink-0 h-20">
           {/* Logo */}
           <Link to="/" className="w-1/4 flex items-center content-center">
             <SpotifyLogo className="w-8 h-8 text-spotify-green" />
@@ -72,7 +72,7 @@ function SearchResultPage() {
           </div>
         </header>
 
-        <div className="w-full h-full fixed flex flex-1 overflow-hidden flex-grow-0" style={{ marginTop: 75}}>
+        <div className="w-full flex flex-1 overflow-hidden flex-shrink-0">
           <main className="flex-0 overflow-x-hidden overflow-y-auto focus:outline-none w-1/2 bg-gray-50">
             {/* Start main area*/}
             <ul className="inset-0 py-6 px-4 sm:px-6 lg:px-8 space-y-3">
