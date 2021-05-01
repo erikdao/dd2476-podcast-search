@@ -36,5 +36,5 @@ export type TEpisodeSearchResult = {
   episodeDescription: string;
   duration: number;
   show?: TShow;
-  clips?: TEpisodeClip[];
+  clips: TEpisodeClip[];
 }

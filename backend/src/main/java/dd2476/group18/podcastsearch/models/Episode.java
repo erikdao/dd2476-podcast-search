@@ -167,7 +167,7 @@ public class Episode {
 
         int position = Collections.indexOfSubList(tempTokens, normalizedTerms);
         int index = position;
-
+        // TODO: check this algorithm, it's not working probably for 2-word queries
         while (position != -1) {
             termsIndices.add(index);
             try {

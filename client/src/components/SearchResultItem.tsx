@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ICommon, TEpisodeSearchResult } from "../types";
+import { WordToken } from "../types/WordToken";
 
 interface ISearchResultItemProps extends ICommon {
   item: TEpisodeSearchResult;
@@ -8,6 +9,9 @@ interface ISearchResultItemProps extends ICommon {
 
 export function SearchResultItem(props: ISearchResultItemProps) {
   const { item, isSelected } = props;
+
+  const previewTokens = item.clips[0].wordTokens.slice(0, 25);
+
   return (
   <div
     className={clsx(
@@ -27,8 +31,12 @@ export function SearchResultItem(props: ISearchResultItemProps) {
       </div>
     </div>
     <h3 className="text-base py-2 text-gray-700">Podcast: {item.show?.showName}</h3>
-    <div className="text-sm text-gray-600">
-      <span>Spotify is all the music you'll ever need. ... Millions of songs and podcasts. No credit <strong>query</strong>. GET SPOTIFY FREE </span>
+    <div className="text-sm text-gray-600 flex flex-wrap">
+      ...
+      {previewTokens.map((token: WordToken, index: number) => (
+        <span className={clsx("mr-1", token.highlight ? "font-semibold" : "")} key={index}>{token.word}</span>
+      ))}
+      ...
     </div>
   </div>
   );
