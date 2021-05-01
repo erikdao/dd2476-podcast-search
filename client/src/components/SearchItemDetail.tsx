@@ -36,22 +36,25 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
       {/* Description */}
       <div className="mt-8">
         <p className="text-gray-800 font-semibold mb-2">Episode description</p>
-        <p className="text-gray-600 text-sm">{item.episodeDescription}</p>
+        <p className="text-gray-600 text-sm overflow-ellipsis">{item.episodeDescription}</p>
       </div>
       {/* Clip information */}
       <div className="mt-8">
         <div className="flex content-between items-center mb-4">
           <div className="flex flex-1 items-start">
-            <span className="font-bold text-gray-800">Clip(s) contain keyword: <span className="px-2 py-1 rounded truncate">{query}</span></span>
+            <span className="font-bold text-gray-800">{item.clips.length} clip(s) contain keyword: <span className="px-2 py-1 rounded truncate">{query}</span></span>
           </div>
         </div>
         <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 space-y-4 items-start">
           {item.clips && item.clips.map((clip: TEpisodeClip, index: number) => (
-            <div className="divide-y divide-y-2">
-              <div className="flex items-end flex-shrink-0">
-                <span className="px-2 py-1 rounded bg-green-100">{getReadableTime(clip.startTime)} - {getReadableTime(clip.endTime)}</span>
+            <div className="rounded-md shadow-md">
+              <div className="p-2 text-sm font-semibold text-white bg-gray-700 rounded-t-md">
+                <span className="mr-4">Clip {index + 1}: </span>
+                <span>{getReadableTime(clip.startTime)} - {getReadableTime(clip.endTime)}</span>
               </div>
-              <EpisodeClip {...clip} key={index} />
+              <div className="p-2">
+                <EpisodeClip {...clip} key={index} />
+              </div>
             </div>
           ))}
         </div>
