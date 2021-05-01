@@ -1,11 +1,15 @@
 package dd2476.group18.podcastsearch.service;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -14,6 +18,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
@@ -26,10 +31,10 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
 import dd2476.group18.podcastsearch.searchers.QueryTerms;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EpisodeDocumentService {
@@ -99,12 +104,18 @@ public class EpisodeDocumentService {
         // Pack everything into the search request
         searchRequest.source(sourceBuilder);
 
+        Instant startSearch = Instant.now();
         SearchResponse response = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
-        SearchHit[] hits = response.getHits().getHits();
+        Instant receiveESResponse = Instant.now();
+        Duration esTime = Duration.between(startSearch, receiveESResponse);
+        log.info("Elasticsearch time: " + esTime.toMillis() + " ms");
+        SearchHits hits = response.getHits();
+        log.info("# of hits: " + hits.getTotalHits());
+        SearchHit[] searchHits = hits.getHits();
 
         List<MatchedEpisodeDocument> results = new ArrayList<>();
 
-        for (SearchHit hit: hits) {
+        for (SearchHit hit: searchHits) {
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             String id = (String) sourceAsMap.get("id");
             MatchedEpisodeDocument episode = new MatchedEpisodeDocument();
@@ -120,15 +131,21 @@ public class EpisodeDocumentService {
             QueryTerms queryTerms = new QueryTerms();
 
             for (Text text: fragments) {
-                Pattern p = Pattern.compile("<em>(.+?)</em>");
+                Pattern p = Pattern.compile("(<em>[^\\s]+</em>\\s?)+");
                 Matcher matcher = p.matcher(text.toString());
-                ArrayList<String> token = new ArrayList<>();
+                String highlightText = "";
 
                 while (matcher.find()) {
-                    token.add((String)matcher.group(1));
+                    highlightText = matcher.group();
                 }
+                ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(highlightText.split("\\s")));
+                ArrayList<String> tokens = new ArrayList<>(
+                    tokenList.stream().map(
+                        to -> to.replace("</em>", "").replace("<em>", "")
+                    ).collect(Collectors.toList())
+                );
                 queryTerms.setOrder(++order);
-                queryTerms.setTerms(token);
+                queryTerms.setTerms(tokens);
 
                 episode.getQueryTerms().add(queryTerms);
             }

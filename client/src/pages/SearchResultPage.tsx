@@ -21,6 +21,7 @@ function SearchResultPage() {
   const [episodes, setEpisodes] = useState<TEpisodeSearchResult[]>([]);
   const [selectedEpisode, setSelectedEpisode] = useState<TEpisodeSearchResult>();
 
+  const clipLength = 120;
   // Pagination param
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(15);
@@ -34,7 +35,7 @@ function SearchResultPage() {
     setEpisodes([]);
     setSelectedEpisode(undefined);
     try {
-      const requestBody: TEpisodeSearchBody = { query, type };
+      const requestBody: TEpisodeSearchBody = { query, type, clipLength };
       const response = await EpisodeApiService.search(requestBody);
       const data: TEpisodeSearchResult[] = response.data;
       setEpisodes(data);

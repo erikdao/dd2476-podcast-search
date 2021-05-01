@@ -28,7 +28,7 @@ public class EpisodeController {
     @PostMapping(value = "/search", consumes = "application/json", produces = "application/json")
     public List<Episode> searchEpisode(@RequestBody EpisodeSearchRequestBody body) {
         String query = body.getQuery();
-        List<Episode> episodes = episodeSearcher.searchEpisodeByTranscript(query);
+        List<Episode> episodes = episodeSearcher.searchEpisodeByTranscript(query, body.getClipLength());
         return episodes;
     }
 }

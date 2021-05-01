@@ -1,7 +1,9 @@
 package dd2476.group18.podcastsearch.models;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -137,7 +139,7 @@ public class Episode {
         return this.createEpisodeDocument();
     }
 
-    public void buildClipForTerms(QueryTerms terms) {
+    public void buildClipForTerms(QueryTerms terms, int clipLength) {
         if (this.wordTokens == null || this.wordTokens.size() == 0) {
             this.wordTokens = this.getTranscript().getWordTokens();
             Collections.sort(this.wordTokens);
@@ -145,15 +147,15 @@ public class Episode {
 
         // Get a list of all tokens in this episode;
         List<String> allTokens = this.wordTokens.stream().map(
-            token -> token.getWord().toLowerCase()
+            token -> token.getWord().toLowerCase().replaceAll("[\\.,;]", "")
         ).collect(Collectors.toList());
 
         List<String> normalizedTerms = terms.getTerms().stream().map(
-            term -> term.toLowerCase()
+            t -> t.toLowerCase()
         ).collect(Collectors.toList());
 
         // This is only true for phrase query
-        // Find the index of the `terms` which is a sublist of all tokens 
+        // Find the index of the `terms` which is a sublist of all tokens
         int termsIndex = Collections.indexOfSubList(allTokens, normalizedTerms);
 
         // Building the clip from list of tokens
@@ -164,7 +166,7 @@ public class Episode {
         List<WordToken> tokensInClip = this.wordTokens.stream()
             .filter(token -> {
                 double startTime = token.getStartTime();
-                return (startTime >= startToken.getStartTime()) && (startTime <= startToken.getStartTime() + 60.0);
+                return (startTime >= startToken.getStartTime()) && (startTime <= startToken.getStartTime() + clipLength);
             })
             .map(token -> {
                 if (normalizedTerms.contains(token.getWord().toLowerCase())) {

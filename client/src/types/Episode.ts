@@ -18,6 +18,7 @@ export type TEpisode = {
 export type TEpisodeSearchBody = {
   query: string | null;
   type: ESearchType;
+  clipLength: number;
 }
 
 export type TEpisodeSearchResult = {

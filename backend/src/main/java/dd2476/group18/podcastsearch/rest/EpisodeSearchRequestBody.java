@@ -11,4 +11,7 @@ public class EpisodeSearchRequestBody {
 
     /* Type of search, e.g., phrase or multi-word */
     private String type;
+
+    /* Length of the clips we want to return */
+    private int clipLength;
 }

@@ -1,6 +1,6 @@
 package dd2476.group18.podcastsearch.searchers;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class QueryTerms {
     /** Order of the token set in the highlighted results */
     private Integer order;
-    private List<String> terms;
+    private ArrayList<String> terms;
 }

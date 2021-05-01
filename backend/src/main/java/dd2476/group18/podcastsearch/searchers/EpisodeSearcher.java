@@ -21,7 +21,7 @@ public class EpisodeSearcher {
     @Autowired
     private final EpisodeRepository episodeRepository;
 
-    public List<Episode> searchEpisodeByTranscript(String query) {
+    public List<Episode> searchEpisodeByTranscript(String query, int clipLength) {
         // Step 1: search with elastic search
         List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
         try {
@@ -35,12 +35,10 @@ public class EpisodeSearcher {
             .map((MatchedEpisodeDocument doc) -> {
                 Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
                 episode.setScore(doc.getScore());
-                QueryTerms firstTerms = doc.getQueryTerms().stream().filter(qt -> qt.getOrder() == 1).findFirst().get();
-                episode.buildClipForTerms(firstTerms);
-                // for (QueryTerms terms: doc.getQueryTerms()) {
-                //     episode.buildClipForTerms(terms);
-                //     break;
-                // }
+                for (QueryTerms terms: doc.getQueryTerms()) {
+                    episode.buildClipForTerms(terms, clipLength);
+                    break;
+                }
                 return episode;
             })
             .collect(Collectors.toList());
