@@ -18,6 +18,7 @@ import dd2476.group18.podcastsearch.views.View;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/shows")
 @RequiredArgsConstructor
 public class ShowController {
@@ -25,7 +26,6 @@ public class ShowController {
     private final ShowService showService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:3000")
     @JsonView(View.List.class)
     public List<Show> getAllShows(
         @RequestParam(defaultValue = "0") Integer pageNo,
@@ -36,7 +36,6 @@ public class ShowController {
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
     @JsonView(View.Detail.class)
     public Show getShowById(@PathVariable(name = "id") String id) {
         return showService.getShowById(id);

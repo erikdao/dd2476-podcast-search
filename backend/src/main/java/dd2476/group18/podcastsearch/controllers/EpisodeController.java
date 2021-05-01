@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/api/episodes")
 @RequiredArgsConstructor
@@ -26,8 +27,7 @@ public class EpisodeController {
     @Autowired
     private final EpisodeSearcher episodeSearcher;
 
-    @JsonView({ View.List.class })
-    @CrossOrigin(origins = "http://localhost:3000")
+    @JsonView(View.List.class)
     @PostMapping(value = "/search", consumes = "application/json", produces = "application/json")
     public List<Episode> searchEpisode(@RequestBody EpisodeSearchRequestBody body) {
         log.info("Query type " + body.getType());
