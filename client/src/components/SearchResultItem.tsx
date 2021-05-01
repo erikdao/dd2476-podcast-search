@@ -10,7 +10,7 @@ interface ISearchResultItemProps extends ICommon {
 export function SearchResultItem(props: ISearchResultItemProps) {
   const { item, isSelected } = props;
 
-  const previewTokens = item.clips[0].wordTokens.slice(0, 25);
+  const previewTokens = item.clips[0] && item.clips[0].wordTokens.slice(0, 25);
 
   return (
   <div
@@ -33,7 +33,7 @@ export function SearchResultItem(props: ISearchResultItemProps) {
     <h3 className="text-base py-2 text-gray-700">Podcast: {item.show?.showName}</h3>
     <div className="text-sm text-gray-600 flex flex-wrap">
       ...
-      {previewTokens.map((token: WordToken, index: number) => (
+      {previewTokens && previewTokens.map((token: WordToken, index: number) => (
         <span className={clsx("mr-1", token.highlight ? "font-semibold" : "")} key={index}>{token.word}</span>
       ))}
       ...
