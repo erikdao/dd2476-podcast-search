@@ -21,7 +21,7 @@ public class EpisodeSearcher {
     @Autowired
     private final EpisodeRepository episodeRepository;
 
-    public List<Episode> searchEpisodeByTranscript(String query, int clipLength) {
+    public List<Episode> phraseSearchEpisodeByTranscript(String query, int clipLength) {
         // Step 1: search with elastic search
         List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
         try {
@@ -41,5 +41,20 @@ public class EpisodeSearcher {
             })
             .collect(Collectors.toList());
         return episodes;
+    }
+
+    public List<Episode> multiwordSearchEpisodeByTranscript(String query, int clipLength) {
+        return new ArrayList<Episode>();
+    }
+
+    /**
+     * Search for episode transcript given the query, favour full matches by
+     * combining multiple type of ES searches
+     * @param query
+     * @param clipLength
+     * @return
+     */
+    public List<Episode> flexibleSearchEpisodeByTranscript(String query, int clipLength) {
+        return new ArrayList<>();
     }
 }

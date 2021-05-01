@@ -15,7 +15,10 @@ import dd2476.group18.podcastsearch.rest.EpisodeSearchRequestBody;
 import dd2476.group18.podcastsearch.searchers.EpisodeSearcher;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/api/episodes")
 @RequiredArgsConstructor
@@ -27,8 +30,10 @@ public class EpisodeController {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/search", consumes = "application/json", produces = "application/json")
     public List<Episode> searchEpisode(@RequestBody EpisodeSearchRequestBody body) {
-        String query = body.getQuery();
-        List<Episode> episodes = episodeSearcher.searchEpisodeByTranscript(query, body.getClipLength());
-        return episodes;
+        log.info("Query type " + body.getType());
+        if (body.getType().equals("phrase")) {
+            return episodeSearcher.phraseSearchEpisodeByTranscript(body.getQuery(), body.getClipLength());
+        }
+        return episodeSearcher.multiwordSearchEpisodeByTranscript(body.getQuery(), body.getClipLength());
     }
 }

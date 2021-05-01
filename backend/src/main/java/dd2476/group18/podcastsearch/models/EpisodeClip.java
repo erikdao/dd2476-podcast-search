@@ -19,16 +19,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonView(View.Minimal.class)
 public class EpisodeClip {
-    @JsonView(View.Minimal.class)
     private Integer order;
-
-    @JsonView(View.Minimal.class)
     private Double startTime;
-
-    @JsonView(View.Minimal.class)
     private Double endTime;
-
-    @JsonView(View.Minimal.class)
     private List<WordToken> wordTokens;
 }
