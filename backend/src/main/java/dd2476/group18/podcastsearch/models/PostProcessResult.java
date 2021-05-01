@@ -21,6 +21,8 @@ public class PostProcessResult implements Serializable{
 
     private String id;
     private String name;
-    private ArrayList<Clip> clips;
+    private List<Clip> clips;
+
+    
     
 }

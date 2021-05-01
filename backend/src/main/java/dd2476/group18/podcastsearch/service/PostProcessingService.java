@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
 
 import javax.websocket.server.PathParam;
 
@@ -32,7 +33,7 @@ public class PostProcessingService {
     final EpisodeRepository episodeRepository;
     private final EpisodeDocumentService episodeDocumentService;
     
-    public List<PostProcessResult> postProcessElasticSearchResult(List<EpisodeDocument> relevantEpisodes, ArrayList<String> keywords){
+    public List<PostProcessResult> postProcessElasticSearchResult(List<EpisodeDocument> relevantEpisodes, String keywords){
         List<PostProcessResult> result = new ArrayList<PostProcessResult>();
         for (int i = 0; i < relevantEpisodes.size(); i++) {
             result.add(postProcesshandler(relevantEpisodes.get(i),keywords));
@@ -40,15 +41,16 @@ public class PostProcessingService {
         return result;
     }
     
-    public PostProcessResult postProcesshandler(EpisodeDocument episodeObj, ArrayList<String> keywords) {
+    public PostProcessResult postProcesshandler(EpisodeDocument episodeObj, String keywords) {
         PostProcessResult currentEpisodeRes = new PostProcessResult();
         currentEpisodeRes = addMetaData(currentEpisodeRes, episodeObj);
         List<Clip> clips = processClips(episodeObj, keywords);
-        currentEpisodeRes.setClips(null);
+        currentEpisodeRes.setClips(clips);
         return currentEpisodeRes;    
     }
 
-    public List<Clip> processClips(EpisodeDocument episode, ArrayList<String> keywords){
+    public List<Clip> processClips(EpisodeDocument episode, String s){
+        ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(s.split(" ")));
         Transcript currentTranscript = episodeRepository.findById(episode.getId()).get().getTranscript(); //gettoken or gettranscript
         List<WordToken> tokens = currentTranscript.getWordTokens();
         Collections.sort(tokens);
@@ -85,14 +87,16 @@ public class PostProcessingService {
         return currentEpisodeRes;
     }
 
-    // This is a test made by Kalle and Caroline
-    // @GetMapping("/search1/{query}")
-    // public List<PostProcessResult> searchEpisodeByTranscript1(@PathVariable("query") String s) {
-    //     List<EpisodeDocument> elasticRes = episodeDocumentService.searchEpisodeByTranscript(s);
-    //     ArrayList<String> keywords = s.split(" ");
-    //     List<PostProcessResult> result = postProcessElasticSearchResult(elasticRes,keywords);
-    //     return result;
-    // }
+    // Endpoint for post-processing
+    @GetMapping("/search1/{query}")
+    public List<PostProcessResult> searchEpisodeByTranscript1(@PathVariable("query") String s) {
+        System.out.println("Endpoint /search1/" +s+ " running");
+        List<EpisodeDocument> elasticRes = episodeDocumentService.searchEpisodeByTranscript(s);
+        System.out.println("elastic res 0" + elasticRes.size());
+        List<PostProcessResult> result = postProcessElasticSearchResult(elasticRes, s);
+        System.out.println("res 0" + result.size());
+        return result;
+    }
 }
 
 
