@@ -27,15 +27,14 @@ public class ElasticSearchController {
         return episodeDocumentService.findByEpisodeUri(uri);
     }
 
-    @PostMapping("/search/episode/description")
-    public List<EpisodeDocument> searchEpisodeByDescription(@RequestParam String transcript) {
-        String[] words = transcript.split(" ");
-        return episodeDocumentService.searchEpisodeByDescription(words);
-    }
-
-    @GetMapping("/search/episode/transcript/{query}")
-    public List<EpisodeDocument> searchEpisodeByTranscript(@PathVariable("query") String s) {
-        return episodeDocumentService.searchEpisodeByTranscript(s);
+    @PostMapping("/search/episode")
+    public List<EpisodeDocument> searchEpisode(@RequestParam String field,
+                                               @RequestParam String text,
+                                               @RequestParam int page,
+                                               @RequestParam int size,
+                                               @RequestParam String searchType
+                                                            ) {
+        return episodeDocumentService.searchWithMatchQuery(field, text, page, size, searchType);
     }
 
     // ---------------- for searching shows ----------------

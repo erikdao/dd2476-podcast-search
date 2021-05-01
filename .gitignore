@@ -61,3 +61,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Client
+**/node_modules
+client/build
+client/.env

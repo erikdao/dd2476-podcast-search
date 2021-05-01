@@ -1,42 +1,28 @@
-import React, { useState } from 'react'
-import Searchbar from './components/Searchbar';
-import Header from './components/Header'
+import React, { useState, useMemo } from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import './styles/css/styles.css';
-import SearchResultItem from './components/SearchResultItem';
-import ProgressBar from './components/ProgressBar';
+import LandingPage from './pages/LandingPage';
+import EpisodePage from './pages/EpisodePage';
+import { SearchResultContext } from './SearchResultContext';
 
 const App = () => {
-
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onSubmit = query => {
-    // query is the string typed in the search bar.
-    // TODO: fetch the right enpoint 
-    setIsLoading(true);
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(data => {
-        setSearchResults(data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('Error in fetch app.js');
-        console.error(err);
-        setIsLoading(false);
-      });
-  };
+  const value = useMemo(() => ({ searchResults, setSearchResults }), [searchResults, setSearchResults]);
 
   return (
     <div className="App">
-      <div className="container">
-        <Header/>
-        <Searchbar onSubmit={onSubmit}/>
-        <div className="search-result-container">
-          {isLoading ? <ProgressBar/> :
-          searchResults.map((searchRes, idx) => <SearchResultItem key={`${idx}`} title={searchRes.name} description={searchRes.company.catchPhrase}/>)}
-        </div>
-      </div>
+      <Router>
+        <SearchResultContext.Provider value={value}>
+          <Switch>
+              <Route path="/episode" component={EpisodePage} />
+              <Route component={LandingPage}/>
+          </Switch>
+        </SearchResultContext.Provider>
+      </Router>
     </div>
   );
 }

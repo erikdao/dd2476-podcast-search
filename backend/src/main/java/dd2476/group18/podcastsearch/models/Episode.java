@@ -12,7 +12,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import dd2476.group18.podcastsearch.views.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,18 +32,23 @@ import lombok.NoArgsConstructor;
 public class Episode {
     @Id
     @Column(name = "id", length = 50)
+    @JsonView(View.List.class)
     private String id;
 
     @Column(name = "episode_uri")
+    @JsonView(View.List.class)
     private String episodeUri;
 
     @Column(name = "episode_name")
+    @JsonView(View.List.class)
     private String episodeName;
 
     @Column(name = "episode_description", columnDefinition = "TEXT")
+    @JsonView(View.List.class)
     private String episodeDescription;
 
     @Column(name = "duration")
+    @JsonView(View.List.class)
     private double duration;
 
     @Column(name = "episode_filename_prefix")

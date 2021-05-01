@@ -42,7 +42,7 @@ public class MetaDataLoader {
 
         // Step 3. Persist the shows and episodes to database
         ArrayList<Show> showList = loader.getShowList();
-        showRepository.saveAll(showList);
+        // showRepository.saveAll(showList);
 
         showList.stream().parallel().forEach(show -> {
             showDocumentRepository.save(show.createShowDocument());
@@ -53,7 +53,7 @@ public class MetaDataLoader {
         log.info("Show metadata imported and indexed in " + showedTime.toSeconds() + " seconds");
 
         ArrayList<Episode> episodeList = loader.getEpisodeList();
-        episodeRepository.saveAll(episodeList);
+        // episodeRepository.saveAll(episodeList);
 
         episodeList.stream().parallel().forEach(episode -> {
             episodeDocumentRepository.save(episode.createEpisodeDocument(false));
