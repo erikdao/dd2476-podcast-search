@@ -21,7 +21,7 @@ function SearchResultPage() {
   const [episodes, setEpisodes] = useState<TEpisodeSearchResult[]>([]);
   const [selectedEpisode, setSelectedEpisode] = useState<TEpisodeSearchResult>();
 
-  const clipLength = 120;
+  const clipLength = 60;
   // Pagination param
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(15);

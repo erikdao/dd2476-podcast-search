@@ -3,7 +3,6 @@ package dd2476.group18.podcastsearch.models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -27,9 +26,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Entity
 @Data
+@Slf4j
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -77,12 +78,12 @@ public class Episode {
     private float score;
 
     @JsonIgnore
-    @Transient
+    @Transient  // So that this property is not persisted to the database
     private List<WordToken> wordTokens;
 
     @JsonView(View.List.class)
-    @Transient
-    private List<WordToken> clips;
+    @Transient  // So that this property is not persisted to the database
+    private List<EpisodeClip> clips = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -143,11 +144,16 @@ public class Episode {
         if (this.wordTokens == null || this.wordTokens.size() == 0) {
             this.wordTokens = this.getTranscript().getWordTokens();
             Collections.sort(this.wordTokens);
+        } else {
+            log.debug("wordTokens loaded");
         }
 
-        // Get a list of all tokens in this episode;
+        /*
+         * Get a list of all tokens in this episode. We remove all the punctuations
+         * from the word for better matching with the `normalizedTerms` below
+         */
         List<String> allTokens = this.wordTokens.stream().map(
-            token -> token.getWord().toLowerCase().replaceAll("[\\.,;]", "")
+            token -> token.getWord().toLowerCase().replaceAll("[\\.,;!]", "")
         ).collect(Collectors.toList());
 
         List<String> normalizedTerms = terms.getTerms().stream().map(
@@ -156,27 +162,70 @@ public class Episode {
 
         // This is only true for phrase query
         // Find the index of the `terms` which is a sublist of all tokens
-        int termsIndex = Collections.indexOfSubList(allTokens, normalizedTerms);
+        ArrayList<Integer> termsIndices = new ArrayList<>();
+        List<String> tempTokens = new ArrayList<>(allTokens);
 
-        // Building the clip from list of tokens
-        int startIndex = termsIndex - 3 >= 0 ? termsIndex - 3 : termsIndex;
-        WordToken startToken = this.wordTokens.get(startIndex);
+        int position = Collections.indexOfSubList(tempTokens, normalizedTerms);
+        int index = position;
 
-        // Get all word tokens that are between the startToken and 1 minute after that
-        List<WordToken> tokensInClip = this.wordTokens.stream()
-            .filter(token -> {
-                double startTime = token.getStartTime();
-                return (startTime >= startToken.getStartTime()) && (startTime <= startToken.getStartTime() + clipLength);
-            })
-            .map(token -> {
-                if (normalizedTerms.contains(token.getWord().toLowerCase())) {
-                    token.setHighlight(true);
+        while (position != -1) {
+            termsIndices.add(index);
+            try {
+                tempTokens = tempTokens.subList(index + normalizedTerms.size(), tempTokens.size());
+                position = Collections.indexOfSubList(tempTokens, normalizedTerms);
+                if (position != -1) {
+                    index = index + normalizedTerms.size() + position;
                 }
-                return token;
-            })
-            .collect(Collectors.toList());
-        Collections.sort(tokensInClip);
-        
-        this.setClips(tokensInClip);
+            } catch (IndexOutOfBoundsException e) {
+                position = -1;
+            } catch (IllegalArgumentException e) {
+                position = -1;
+            }
+        }
+
+        if (termsIndices.size() == 0 || termsIndices.stream().allMatch(ti -> ti == -1)) {
+            this.setClips(new ArrayList<>());
+            return;
+        }
+
+        // Annotate highlights
+        for (Integer termsIndex: termsIndices) {
+            for (int i = termsIndex; i < normalizedTerms.size() + termsIndex; i++) {
+                WordToken word = this.wordTokens.get(i);
+                word.setHighlight(true);
+                this.wordTokens.set(i, word);
+            }
+        }
+        /*
+         * From the termsIndices list, we know how many instances of the phrase there are in the transcript
+         * of the episode. Next, we're going to build clips from those instances.
+         * 
+         * To build a clip, we look to the first word of each phrase and take 3 token backs (if possible),
+         * this is to create a friendly clip. Then we'll take all the words whose startTime is less than
+         * or equal to firstWord.startTime + clipLength (defatul to 60). Along the way, we can annotate
+         * which words should be highlighted (as they're appreared in the phrase)
+         */
+        int order = 0;
+        for (Integer termsIndex: termsIndices) {
+            int startIndex = termsIndex - 3 >= 0 ? termsIndex - 3 : termsIndex;
+            WordToken startWord = this.wordTokens.get(startIndex);
+
+            // Get all words that are between the startWord and `clipLength` seconds after that
+            List<WordToken> wordsInClip = this.wordTokens.stream()
+                .filter(token -> {
+                    double startTime = token.getStartTime();
+                    return (startTime >= startWord.getStartTime()) && (startTime <= startWord.getStartTime() + clipLength);
+                })
+                .collect(Collectors.toList());
+
+            EpisodeClip clip = EpisodeClip.builder()
+                .order(++order)
+                .startTime(wordsInClip.get(0).getStartTime())
+                .endTime(wordsInClip.get(wordsInClip.size() - 1).getEndTime())
+                .wordTokens(wordsInClip)
+                .build();
+
+            this.clips.add(clip);
+        }
     }
 }
