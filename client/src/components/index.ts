@@ -1,3 +1,4 @@
+export * from './EpisodeClip';
 export * from './LoadingIndicator';
 export * from './PageTitle';
 export * from './QueryTypeSelect';

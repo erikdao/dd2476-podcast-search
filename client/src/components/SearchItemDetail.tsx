@@ -1,43 +1,20 @@
-import clsx from "clsx";
-import { ICommon, TEpisodeSearchResult } from "../types";
-import { WordToken } from "../types/WordToken";
+import { ICommon, TEpisodeClip, TEpisodeSearchResult } from "../types";
 import { ShowImagePlaceHolder } from "./ShowImagePlaceholder";
+import { EpisodeClip } from "./EpisodeClip";
+import { format, addSeconds } from "date-fns";
 
 interface ISearchItemDetailProps extends ICommon {
   item: TEpisodeSearchResult;
   query: string | null;
 }
 
-function getReadableTime(time: number) {
-  if (time < 60.0) {
-    return `0:${Math.floor(time)}`;  
-  } else if (time == 60.0) {
-    return `1:00`;
-  } else {
-    const minute = Math.floor(time / 60.0);
-    const second = time - minute * 60;
-    return second < 10 ? `${minute}:0${Math.round(second)}` : `${minute}:${Math.round(second)}`;
-  }
-}
-
-function getClipTimes(item: TEpisodeSearchResult) {
-  if (!item.clips || (item.clips && !item.clips.length)) {
-    return { clipStart: null, clipEnd: null};
-  }
-  const clips: WordToken[] = item.clips;
-  const firstToken = clips[0];
-  const lastToken = clips.slice(-1)[0];
-  return {
-    clipStart: getReadableTime(firstToken.startTime),
-    clipEnd: getReadableTime(lastToken.endTime)
-  }
-}
+function getReadableTime(time: number): string {
+  let now = addSeconds(new Date(0), time);
+  return format(now, "mm:ss");
+} 
 
 export function SearchItemDetail(props: ISearchItemDetailProps) {
   const { item, query } = props;
-
-  const { clipStart, clipEnd } = getClipTimes(item);
-
   return (
     <>
       {/* Meta data */}
@@ -65,17 +42,17 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
       <div className="mt-8">
         <div className="flex content-between items-center mb-4">
           <div className="flex flex-1 items-start">
-            <span className="font-bold text-gray-800">Clip contains keyword: <span className="px-2 py-1 rounded truncate">{query}</span></span>
-          </div>
-          <div className="flex items-end flex-shrink-0">
-            <span className="px-2 py-1 rounded bg-green-100">{clipStart} - {clipEnd}</span>
+            <span className="font-bold text-gray-800">Clip(s) contain keyword: <span className="px-2 py-1 rounded truncate">{query}</span></span>
           </div>
         </div>
-        <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 items-start">
-          {item.clips && item.clips.length > 0 && item.clips.map((wordToken: WordToken, index: number) => (
-            <span key={index} className={clsx(
-              wordToken.highlight ? "px-2 rounded bg-spotify-green text-gray-50" : ""
-            )}>{wordToken.word}</span>
+        <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 space-y-4 items-start">
+          {item.clips && item.clips.map((clip: TEpisodeClip, index: number) => (
+            <div className="divide-y divide-y-2">
+              <div className="flex items-end flex-shrink-0">
+                <span className="px-2 py-1 rounded bg-green-100">{getReadableTime(clip.startTime)} - {getReadableTime(clip.endTime)}</span>
+              </div>
+              <EpisodeClip {...clip} key={index} />
+            </div>
           ))}
         </div>
       </div>

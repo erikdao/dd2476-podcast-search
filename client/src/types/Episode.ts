@@ -21,6 +21,13 @@ export type TEpisodeSearchBody = {
   clipLength: number;
 }
 
+export type TEpisodeClip = {
+  order: number;
+  startTime: number;
+  endTime: number;
+  wordTokens: WordToken[];
+}
+
 export type TEpisodeSearchResult = {
   id: string;
   score?: number;
@@ -29,5 +36,5 @@ export type TEpisodeSearchResult = {
   episodeDescription: string;
   duration: number;
   show?: TShow;
-  clips?: WordToken[];
+  clips?: TEpisodeClip[];
 }
