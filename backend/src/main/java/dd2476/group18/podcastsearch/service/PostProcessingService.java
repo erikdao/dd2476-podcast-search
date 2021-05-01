@@ -91,15 +91,13 @@ public class PostProcessingService {
     @GetMapping("/search1/{query}")
     public List<PostProcessResult> searchEpisodeByTranscript1(@PathVariable("query") String s) {
         System.out.println("Endpoint /search1/" +s+ " running");
-        List<EpisodeDocument> elasticRes = episodeDocumentService.searchEpisodeByTranscript(s);
+        List<EpisodeDocument> elasticRes = episodeDocumentService.searchWithMatchQuery("transcript", s, 0, 10, "match");
         System.out.println("elastic res 0" + elasticRes.size());
         List<PostProcessResult> result = postProcessElasticSearchResult(elasticRes, s);
         System.out.println("res 0" + result.size());
         return result;
     }
 }
-
-
 
 
 
