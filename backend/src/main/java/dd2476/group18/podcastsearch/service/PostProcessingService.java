@@ -44,16 +44,60 @@ public class PostProcessingService {
     public PostProcessResult postProcesshandler(EpisodeDocument episodeObj, String keywords) {
         PostProcessResult currentEpisodeRes = new PostProcessResult();
         currentEpisodeRes = addMetaData(currentEpisodeRes, episodeObj);
-        List<Clip> clips = processClips(episodeObj, keywords);
+        List<Clip> clips = processClip(episodeObj, keywords);
         currentEpisodeRes.setClips(clips);
         return currentEpisodeRes;    
     }
 
-    public List<Clip> processClips(EpisodeDocument episode, String s){
+    public List<Clip> processClip(EpisodeDocument episode, String s){
         ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(s.split(" ")));
         Transcript currentTranscript = episodeRepository.findById(episode.getId()).get().getTranscript(); //gettoken or gettranscript
         List<WordToken> tokens = currentTranscript.getWordTokens();
-        Collections.sort(tokens);
+        // it seems like it already is sorted
+        // Collections.sort(tokens);
+
+        List<Clip> clips = new ArrayList<Clip>();
+        String tok;
+        StringBuilder transcriptExc = new StringBuilder("");
+        double start = 0;
+        double end = 0;
+        double limit = 40;
+        boolean isbuildingTranscript = false;
+        // this handles multiword queries
+        for (int i = 0; i < tokens.size(); i++) {
+            tok = tokens.get(i).getWord();
+
+            if(isbuildingTranscript && tokens.get(i).getStartTime()-end > limit){
+                 //create and add clip
+                 Clip newClip = new Clip();
+                 newClip.endTime = tokens.get(i).getEndTime();
+                 newClip.startTime = start;
+                 newClip.transcriptExcerpt = transcriptExc.toString();
+                 clips.add(newClip);
+                 transcriptExc.setLength(0);
+                 isbuildingTranscript = false;                
+            } else if (isbuildingTranscript) {
+                transcriptExc.append(tok + " ");
+            } 
+            if (keywords.contains(tok)) {
+                if(isbuildingTranscript){
+                    end = tokens.get(i).getEndTime();
+                } else {
+                    isbuildingTranscript = true;
+                    start = tokens.get(i).getStartTime();
+                    end = tokens.get(i).getEndTime();   
+                }
+                transcriptExc.append(tok + " ");
+            }
+        }
+        return clips;
+    }
+
+    public List<Clip> processClips_OLD(EpisodeDocument episode, String s){
+        ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(s.split(" ")));
+        Transcript currentTranscript = episodeRepository.findById(episode.getId()).get().getTranscript(); //gettoken or gettranscript
+        List<WordToken> tokens = currentTranscript.getWordTokens();
+        // Collections.sort(tokens);
         
         List<Clip> clips = new ArrayList<Clip>();
         Clip newClip = new Clip();
@@ -65,13 +109,13 @@ public class PostProcessingService {
         for (int i = 0; i < tokens.size(); i++) {
             tok = tokens.get(i).getWord();
             if(isReading){
-                transcriptExcerpt.append(tok);
+                transcriptExcerpt.append(tok+ " ");
             }
             if (keywords.contains(tok)) {
                 if(startTime < 0){
                     newClip.startTime = tokens.get(i).getStartTime();
                     isReading = true;
-                    transcriptExcerpt.append(tok);
+                    transcriptExcerpt.append(tok+" ");
                 }
                 newClip.endTime = tokens.get(i).getEndTime();
             }
@@ -92,9 +136,7 @@ public class PostProcessingService {
     public List<PostProcessResult> searchEpisodeByTranscript1(@PathVariable("query") String s) {
         System.out.println("Endpoint /search1/" +s+ " running");
         List<EpisodeDocument> elasticRes = episodeDocumentService.searchWithMatchQuery("transcript", s, 0, 10, "match");
-        System.out.println("elastic res 0" + elasticRes.size());
         List<PostProcessResult> result = postProcessElasticSearchResult(elasticRes, s);
-        System.out.println("res 0" + result.size());
         return result;
     }
 }
