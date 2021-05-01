@@ -23,6 +23,9 @@ public class EpisodeDocument implements Serializable {
 
     @Field(name = "episode_uri")
     private String episodeUri;
+    
+    @Field(name = "episode_id")
+    private String episodeId;
 
     @Field(name = "episode_name", type = FieldType.Text)
     private String episodeName;
