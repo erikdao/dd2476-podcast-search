@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
+import dd2476.group18.podcastsearch.searchers.HighlightSegment;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
 import dd2476.group18.podcastsearch.searchers.QueryTerms;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,8 @@ public class EpisodeDocumentService {
     @Autowired
     private final RestHighLevelClient elasticsearchClient;
 
+    private final SearchRequest searchRequest = new SearchRequest("episodes");
+
     // use elastic search to find a specific episode by id
     public EpisodeDocument findByEpisodeId(String id) {
         return episodeDocumentRepository.findById(id).get();
@@ -58,7 +61,6 @@ public class EpisodeDocumentService {
     }
 
     public List<MatchedEpisodeDocument> phraseTranscriptSearch(String query) throws IOException {
-        SearchRequest searchRequest = new SearchRequest("episodes");
         // Define a match phrase query, exlude `transcript` field from the result
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.query(QueryBuilders.matchPhraseQuery("transcript", query));
@@ -76,13 +78,8 @@ public class EpisodeDocumentService {
         // Pack everything into the search request
         searchRequest.source(sourceBuilder);
 
-        Instant startSearch = Instant.now();
         SearchResponse response = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
-        Instant receiveESResponse = Instant.now();
-        Duration esTime = Duration.between(startSearch, receiveESResponse);
-        log.info("Elasticsearch time: " + esTime.toMillis() + " ms");
         SearchHits hits = response.getHits();
-        log.info("# of hits: " + hits.getTotalHits());
         SearchHit[] searchHits = hits.getHits();
 
         List<MatchedEpisodeDocument> results = new ArrayList<>();
@@ -93,35 +90,21 @@ public class EpisodeDocumentService {
             MatchedEpisodeDocument episode = new MatchedEpisodeDocument();
             episode.setEpisodeId(id);
             episode.setScore(hit.getScore());
-            episode.setQueryTerms(new ArrayList<>());
-
+            
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             HighlightField highlightField = highlightFields.get("transcript");
             Text[] fragments = highlightField.fragments();
+            List<HighlightSegment> highlightSegments = new ArrayList<>();
 
-            int order = 0;
-            QueryTerms queryTerms = new QueryTerms();
-
-            for (Text text: fragments) {
-                Pattern p = Pattern.compile("(<em>[^\\s]+</em>\\s?)+");
-                Matcher matcher = p.matcher(text.toString());
-                String highlightText = "";
-
-                while (matcher.find()) {
-                    highlightText = matcher.group();
-                }
-                ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(highlightText.split("\\s")));
-                ArrayList<String> tokens = new ArrayList<>(
-                    tokenList.stream().map(
-                        to -> to.replace("</em>", "").replace("<em>", "")
-                    ).collect(Collectors.toList())
-                );
-                queryTerms.setOrder(++order);
-                queryTerms.setTerms(tokens);
-
-                episode.getQueryTerms().add(queryTerms);
-            }
-
+            Arrays.asList(fragments).stream()
+                .forEach((Text text) -> {
+                    highlightSegments.add(HighlightSegment.builder()
+                    .normalizedTokens(text.toString())
+                    .highlightIndices()
+                    .build());
+                });
+            
+            episode.setHighlightSegments(highlightSegments);
             results.add(episode);
         }
 

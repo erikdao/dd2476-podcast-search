@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dd2476.group18.podcastsearch.models.Episode;
+import dd2476.group18.podcastsearch.models.EpisodeClip;
 import dd2476.group18.podcastsearch.repositories.EpisodeRepository;
 import dd2476.group18.podcastsearch.service.EpisodeDocumentService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,10 @@ public class EpisodeSearcher {
             .map((MatchedEpisodeDocument doc) -> {
                 Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
                 episode.setScore(doc.getScore());
-                QueryTerms terms = doc.getQueryTerms().get(0);
-                episode.buildClipForTerms(terms, clipLength);
+                for (HighlightSegment highlightSegment: doc.getHighlightSegments()) {
+                    EpisodeClip clip = episode.buildClipForTerms(highlightSegment, clipLength);
+                    episode.getClips().add(clip);
+                }
                 return episode;
             })
             .collect(Collectors.toList());

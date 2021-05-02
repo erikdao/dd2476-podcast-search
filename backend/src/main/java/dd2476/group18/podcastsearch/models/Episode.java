@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import dd2476.group18.podcastsearch.searchers.HighlightSegment;
 import dd2476.group18.podcastsearch.searchers.QueryTerms;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.AllArgsConstructor;
@@ -83,7 +84,7 @@ public class Episode {
 
     @JsonView(View.List.class)
     @Transient  // So that this property is not persisted to the database
-    private List<EpisodeClip> clips = new ArrayList<>();
+    private List<EpisodeClip> clips;
 
     @Override
     public String toString() {
@@ -126,6 +127,7 @@ public class Episode {
             .showUri(this.getShow().getShowUri())
             .build();
     }
+
     public EpisodeDocument createEpisodeDocument(boolean includeTranscript) {
         if (!includeTranscript) {
             return EpisodeDocument.builder()
@@ -140,7 +142,7 @@ public class Episode {
         return this.createEpisodeDocument();
     }
 
-    public void buildClipForTerms(QueryTerms terms, int clipLength) {
+    public EpisodeClip buildClipForTerms(HighlightSegment highlightSegment, int clipLength) {
         if (this.wordTokens == null || this.wordTokens.size() == 0) {
             this.wordTokens = this.getTranscript().getWordTokens();
             Collections.sort(this.wordTokens);
@@ -153,79 +155,44 @@ public class Episode {
          * from the word for better matching with the `normalizedTerms` below
          */
         List<String> allTokens = this.wordTokens.stream().map(
-            token -> token.getWord().toLowerCase().replaceAll("[\\.,;!]", "")
+            token -> token.getWord().toLowerCase().replaceAll("[\\.,;!\\?]", "")
         ).collect(Collectors.toList());
 
-        List<String> normalizedTerms = terms.getTerms().stream().map(
-            t -> t.toLowerCase()
-        ).collect(Collectors.toList());
+        // Remove <em></em> in some words in the highlightSegment
+        List<String> normalizedTokens = highlightSegment.getNormalizedTokens()
+                    .stream().map(t -> t.replaceAll("</em>", "").replaceAll("<em>", ""))
+                    .collect(Collectors.toList());
 
-        // This is only true for phrase query
-        // Find the index of the `terms` which is a sublist of all tokens
-        ArrayList<Integer> termsIndices = new ArrayList<>();
-        List<String> tempTokens = new ArrayList<>(allTokens);
+        // Match the highlight chunk to allTokens to find the start index of the clip
+        int startIndex = Collections.indexOfSubList(allTokens, normalizedTokens);
 
-        int position = Collections.indexOfSubList(tempTokens, normalizedTerms);
-        int index = position;
-        // TODO: Fix me
-        while (position != -1) {
-            termsIndices.add(index);
-            try {
-                tempTokens = tempTokens.subList(index + normalizedTerms.size(), tempTokens.size());
-                position = Collections.indexOfSubList(tempTokens, normalizedTerms);
-                if (position != -1) {
-                    index = index + normalizedTerms.size() + position;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                position = -1;
-            } catch (IllegalArgumentException e) {
-                position = -1;
-            }
-        }
+        // Annotate hightlight
+        highlightSegment.getHighlightIndices().forEach(index -> {
+            this.wordTokens.get(index + startIndex).setHighlight(true);
+        });
+    
+        // Build the clip
+        WordToken startWord = this.wordTokens.get(startIndex);
 
-        if (termsIndices.size() == 0 || termsIndices.stream().allMatch(ti -> ti == -1)) {
-            this.setClips(new ArrayList<>());
-            return;
-        }
-
-        // Annotate highlights
-        for (Integer termsIndex: termsIndices) {
-            for (int i = termsIndex; i < normalizedTerms.size() + termsIndex; i++) {
-                WordToken word = this.wordTokens.get(i);
-                word.setHighlight(true);
-                this.wordTokens.set(i, word);
-            }
-        }
-        /*
-         * From the termsIndices list, we know how many instances of the phrase there are in the transcript
-         * of the episode. Next, we're going to build clips from those instances.
-         * 
-         * To build a clip, we look to the first word of each phrase and take 3 token backs (if possible),
+        /* To build a clip, we look to the first word of each phrase and take 3 token backs (if possible),
          * this is to create a friendly clip. Then we'll take all the words whose startTime is less than
          * or equal to firstWord.startTime + clipLength (defatul to 60). Along the way, we can annotate
          * which words should be highlighted (as they're appreared in the phrase)
-         */
-        int order = 0;
-        for (Integer termsIndex: termsIndices) {
-            int startIndex = termsIndex - 3 >= 0 ? termsIndex - 3 : termsIndex;
-            WordToken startWord = this.wordTokens.get(startIndex);
+         */ 
+        List<WordToken> wordsInClip = this.wordTokens.stream()
+        .filter(token -> {
+            double startTime = token.getStartTime();
+            return (startTime >= startWord.getStartTime()) && (startTime <= startWord.getStartTime() + clipLength);
+        })
+        .collect(Collectors.toList());
 
-            // Get all words that are between the startWord and `clipLength` seconds after that
-            List<WordToken> wordsInClip = this.wordTokens.stream()
-                .filter(token -> {
-                    double startTime = token.getStartTime();
-                    return (startTime >= startWord.getStartTime()) && (startTime <= startWord.getStartTime() + clipLength);
-                })
-                .collect(Collectors.toList());
+        EpisodeClip clip = EpisodeClip.builder()
+            .order(0)
+            .startTime(wordsInClip.get(0).getStartTime())
+            .endTime(wordsInClip.get(wordsInClip.size() - 1).getEndTime())
+            .wordTokens(wordsInClip)
+            .build();
 
-            EpisodeClip clip = EpisodeClip.builder()
-                .order(++order)
-                .startTime(wordsInClip.get(0).getStartTime())
-                .endTime(wordsInClip.get(wordsInClip.size() - 1).getEndTime())
-                .wordTokens(wordsInClip)
-                .build();
-
-            this.clips.add(clip);
-        }
+        return clip;
     }
 }
