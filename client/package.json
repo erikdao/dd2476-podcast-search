@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build:dev": "REACT_APP_ENV=dev && craco build",
+    "build:prod": "REACT_APP_ENV=prod && craco build",
     "test": "craco test"
   },
   "eslintConfig": {

@@ -1,11 +1,11 @@
+import config from '../config';
 import { TEpisodeSearchBody } from "../types";
-import request from "./request"
-
+import request from "./request";
 /**
  * Service to send and receive data from Episode REST API
  */
 const endpoints = {
-  search: 'http://localhost:8080/api/episodes/search',
+  search: `${config.apiEndpoint}/episodes/search`,
 };
 
 const EpisodeApiService = {

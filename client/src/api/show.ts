@@ -1,11 +1,12 @@
 import request from "./request"
+import config from '../config';
 
 /**
  * Service to send and receive data from Show REST API
  */
 const endpoints = {
-  getAll: 'http://localhost:8080/api/shows',
-  getById: (id: string) => `http://localhost:8080/api/shows/${id}`,
+  getAll: `${config.apiEndpoint}/shows`,
+  getById: (id: string) => `${config.apiEndpoint}/shows/${id}`,
 };
 
 const ShowApiService = {
