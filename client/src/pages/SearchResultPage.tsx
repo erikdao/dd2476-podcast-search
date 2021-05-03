@@ -21,30 +21,46 @@ function SearchResultPage() {
   const [episodes, setEpisodes] = useState<TEpisodeSearchResult[]>([]);
   const [selectedEpisode, setSelectedEpisode] = useState<TEpisodeSearchResult>();
 
-  const clipLength = 60;
+  // Length n of clips we want to extract
+  const clipLength = 120;
   // Pagination param
-  const [from, setFrom] = useState(30);
-  const [size, setSize] = useState(15);
+  const [from, setFrom] = useState(0);
+  const size = 15;
 
   const handleSearchSubmit = (q: string): void => {
-    setQuery(q);
+    if (q.length && q != query) {
+        setEpisodes([]);
+        setSelectedEpisode(undefined);
+        setFrom(0);
+        setQuery(q);
+    }
   }
 
   const searchEpisodes = async (): Promise<void> => {
     setSearching(true);
-    setEpisodes([]);
-    setSelectedEpisode(undefined);
     try {
       const requestBody: TEpisodeSearchBody = { query, type, clipLength };
       const response = await EpisodeApiService.search(requestBody, { from, size });
       let data: TEpisodeSearchResult[] = response.data;
+      // Filter some empty clips that returned by the server
       data = data.filter((d: TEpisodeSearchResult) => d.clips && d.clips.length > 0 && d.clips[0].wordTokens);
-      setEpisodes(data);
+      const newEpisodes = episodes.concat(data);
+      setEpisodes(newEpisodes);
     } catch (error) {
       console.log(error);
     } finally {
       setSearching(false);
     }
+  }
+
+  // Handler for scrolling event of the result list
+  const handleScroll = async (e: React.UIEvent<HTMLElement>): Promise<void> => {
+     const bottom = e.currentTarget.scrollHeight - e.currentTarget.scrollTop === e.currentTarget.clientHeight;
+     if (bottom) {
+        console.log("Scroll to bottom");
+        setFrom(from + size);
+        await searchEpisodes();
+     }
   }
 
   useEffect(() => {
@@ -74,16 +90,16 @@ function SearchResultPage() {
         </header>
 
         <div className="w-full flex flex-1 overflow-hidden flex-shrink-0">
-          <main className="flex-0 overflow-x-hidden overflow-y-auto focus:outline-none w-1/2 bg-gray-50">
+          <main className="flex-0 overflow-x-hidden overflow-y-auto focus:outline-none w-1/2 bg-gray-50" onScroll={handleScroll}>
             {/* Start main area*/}
-            <ul className="inset-0 py-6 px-4 sm:px-6 lg:px-8 space-y-3">
+            <ul className="inset-0 py-6 px-4 sm:px-6 lg:px-8 space-y-3"> 
               {/* Search result item */}
-              { searching && <LoadingIndicator className="mx-auto h-6 w-6 text-green-500" /> }
-              { !searching && episodes.map((episode: TEpisodeSearchResult, index: number) => (
+              {episodes.map((episode: TEpisodeSearchResult, index: number) => (
                   <li key={index} onClick={() => setSelectedEpisode(episode)}>
                     <SearchResultItem item={episode} isSelected={selectedEpisode?.id === episode.id}/>
                   </li>
               ))}
+              { searching && <LoadingIndicator className="mx-auto h-6 w-6 text-green-500" /> }
             </ul>
             {/* End main area */}
           </main>
