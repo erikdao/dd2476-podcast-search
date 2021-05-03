@@ -31,11 +31,8 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.searchers.HighlightSegment;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
-import dd2476.group18.podcastsearch.searchers.QueryTerms;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EpisodeDocumentService {
@@ -60,12 +57,12 @@ public class EpisodeDocumentService {
         return episodeDocumentRepository.findByEpisodeUri(uri);
     }
 
-    public List<MatchedEpisodeDocument> phraseTranscriptSearch(String query) throws IOException {
+    public List<MatchedEpisodeDocument> phraseTranscriptSearch(String query, int from, int size) throws IOException {
         // Define a match phrase query, exlude `transcript` field from the result
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.query(QueryBuilders.matchPhraseQuery("transcript", query));
-        sourceBuilder.from(0);
-        sourceBuilder.size(15);
+        sourceBuilder.from(from);
+        sourceBuilder.size(size);
         sourceBuilder.fetchSource(includes, excludes);
 
         // Highlight

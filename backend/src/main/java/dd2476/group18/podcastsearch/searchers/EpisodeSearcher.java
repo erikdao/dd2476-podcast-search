@@ -22,11 +22,11 @@ public class EpisodeSearcher {
     @Autowired
     private final EpisodeRepository episodeRepository;
 
-    public List<Episode> phraseSearchEpisodeByTranscript(String query, int clipLength) {
+    public List<Episode> phraseSearchEpisodeByTranscript(String query, int clipLength, int from, int size) {
         // Step 1: search with elastic search
         List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
         try {
-            episodeDocuments = episodeDocumentService.phraseTranscriptSearch(query);
+            episodeDocuments = episodeDocumentService.phraseTranscriptSearch(query, from, size);
         } catch (IOException e) {
             e.printStackTrace();
         }

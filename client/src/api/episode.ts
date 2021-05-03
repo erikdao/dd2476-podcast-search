@@ -9,11 +9,12 @@ const endpoints = {
 };
 
 const EpisodeApiService = {
-  search(data: TEpisodeSearchBody) {
+  search(data: TEpisodeSearchBody, params?: any) {
     return request({
       method: "POST",
       url: endpoints.search,
       data,
+      params,
     });
   },
 }
