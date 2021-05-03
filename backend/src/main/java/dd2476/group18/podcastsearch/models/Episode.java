@@ -160,12 +160,22 @@ public class Episode {
 
         // Remove <em></em> in some words in the highlightSegment
         List<String> normalizedTokens = highlightSegment.getNormalizedTokens()
-                    .stream().map(t -> t.replaceAll("</em>", "").replaceAll("<em>", ""))
+                    .stream().map(t -> t.replaceAll("</em>", "").replaceAll("<em>", "").trim())
                     .collect(Collectors.toList());
+
+        // Senitize checking of the first element
+        String firstEl = normalizedTokens.get(0);
+        if (firstEl.length() == 0 || (!Character.isLetterOrDigit(firstEl.charAt(0)) && !firstEl.contains("<em>"))) {
+            normalizedTokens.remove(0);
+        }
 
         // Match the highlight chunk to allTokens to find the start index of the clip
         int startIndex = Collections.indexOfSubList(allTokens, normalizedTokens);
 
+        if (startIndex == -1) {
+            System.out.println(normalizedTokens);
+            return new EpisodeClip();
+        }
         // Annotate hightlight
         highlightSegment.getHighlightIndices().forEach(index -> {
             this.wordTokens.get(index + startIndex).setHighlight(true);

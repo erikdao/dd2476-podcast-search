@@ -20,7 +20,7 @@ let config: IConfig = {};
 
 console.log(process.env.REACT_APP_ENV);
 
-if (process.env.REACT_APP_ENV == 'prod') {
+if (process.env.REACT_APP_ENV === 'prod') {
   config = prod;
 } else {
   config = dev;

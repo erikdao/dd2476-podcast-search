@@ -36,6 +36,7 @@ public class EpisodeSearcher {
             .map((MatchedEpisodeDocument doc) -> {
                 Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
                 episode.setScore(doc.getScore());
+                episode.setClips(new ArrayList<EpisodeClip>());
                 for (HighlightSegment highlightSegment: doc.getHighlightSegments()) {
                     EpisodeClip clip = episode.buildClipForTerms(highlightSegment, clipLength);
                     episode.getClips().add(clip);

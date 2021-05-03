@@ -9,7 +9,6 @@ interface ISearchResultItemProps extends ICommon {
 
 export function SearchResultItem(props: ISearchResultItemProps) {
   const { item, isSelected } = props;
-
   const previewTokens = item.clips[0] && item.clips[0].wordTokens.slice(0, 25);
 
   return (

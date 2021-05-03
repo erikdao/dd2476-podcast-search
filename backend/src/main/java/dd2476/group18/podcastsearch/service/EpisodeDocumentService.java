@@ -71,6 +71,7 @@ public class EpisodeDocumentService {
         // Highlight
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.highlighterType("plain");
+        highlightBuilder.fragmenter("simple");
         HighlightBuilder.Field highlightTranscript = new HighlightBuilder.Field("transcript");
         highlightBuilder.field(highlightTranscript);
         sourceBuilder.highlighter(highlightBuilder);

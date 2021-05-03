@@ -37,7 +37,8 @@ function SearchResultPage() {
     try {
       const requestBody: TEpisodeSearchBody = { query, type, clipLength };
       const response = await EpisodeApiService.search(requestBody);
-      const data: TEpisodeSearchResult[] = response.data;
+      let data: TEpisodeSearchResult[] = response.data;
+      data = data.filter((d: TEpisodeSearchResult) => d.clips && d.clips.length > 0 && d.clips[0].wordTokens);
       setEpisodes(data);
     } catch (error) {
       console.log(error);

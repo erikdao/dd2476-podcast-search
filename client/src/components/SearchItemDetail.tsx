@@ -47,7 +47,7 @@ export function SearchItemDetail(props: ISearchItemDetailProps) {
         </div>
         <div className="flex flex-wrap pb-4 text-gray-700 space-x-1 space-y-4 items-start">
           {item.clips && item.clips.map((clip: TEpisodeClip, index: number) => (
-            <div className="rounded-md shadow-md">
+            <div className="rounded-md shadow-md" key={index}>
               <div className="p-2 text-sm font-semibold text-white bg-gray-700 rounded-t-md">
                 <span className="mr-4">Clip {index + 1}: </span>
                 <span>{getReadableTime(clip.startTime)} - {getReadableTime(clip.endTime)}</span>
