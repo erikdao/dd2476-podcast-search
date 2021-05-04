@@ -86,8 +86,8 @@ public class PostProcessingService {
                     isbuildingTranscript = true;
                     start = tokens.get(i).getStartTime();
                     end = tokens.get(i).getEndTime();   
+                    transcriptExc.append(tok + " ");
                 }
-                transcriptExc.append(tok + " ");
             }
         }
         return clips;
