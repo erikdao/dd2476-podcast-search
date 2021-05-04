@@ -28,7 +28,7 @@ function SearchResultPage() {
   const size = 15;
 
   const handleSearchSubmit = (q: string): void => {
-    if (q.length && q != query) {
+    if (q.length && q !== query) {
         setEpisodes([]);
         setSelectedEpisode(undefined);
         setFrom(0);

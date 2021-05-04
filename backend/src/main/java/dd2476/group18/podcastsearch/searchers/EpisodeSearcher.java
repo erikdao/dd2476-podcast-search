@@ -47,7 +47,13 @@ public class EpisodeSearcher {
         return episodes;
     }
 
-    public List<Episode> multiwordSearchEpisodeByTranscript(String query, int clipLength) {
+    public List<Episode> multiwordSearchEpisodeByTranscript(String query, int clipLength, int from, int size) {
+        List<MatchedEpisodeDocument> episodeDocuments = new ArrayList<>();
+        try {
+            episodeDocuments = episodeDocumentService.multiwordTranscriptSearch(query, from, size);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return new ArrayList<Episode>();
     }
 
