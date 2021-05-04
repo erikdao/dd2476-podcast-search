@@ -26,7 +26,6 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.searchers.HighlightSegment;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
