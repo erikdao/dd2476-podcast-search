@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import dd2476.group18.podcastsearch.searchers.HighlightSegment;
-import dd2476.group18.podcastsearch.searchers.QueryTerms;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

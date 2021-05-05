@@ -1,8 +1,6 @@
 package dd2476.group18.podcastsearch.controllers;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +16,7 @@ import dd2476.group18.podcastsearch.rest.EpisodeSearchRequestBody;
 import dd2476.group18.podcastsearch.searchers.EpisodeSearcher;
 import dd2476.group18.podcastsearch.views.View;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-
-@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/api/episodes")
@@ -37,10 +32,6 @@ public class EpisodeController {
         @RequestParam(name = "size", defaultValue = "15") int size,
         @RequestBody EpisodeSearchRequestBody body
     ) {
-        log.info("Query type " + body.getType());
-        if (body.getType().equals("phrase")) {
-            return episodeSearcher.phraseSearchEpisodeByTranscript(body.getQuery(), body.getClipLength(), from, size);
-        }
-        return episodeSearcher.multiwordSearchEpisodeByTranscript(body.getQuery(), body.getClipLength());
+        return episodeSearcher.phraseSearchEpisodeByTranscript(body.getQuery(), body.getClipLength(), from, size);
     }
 }
