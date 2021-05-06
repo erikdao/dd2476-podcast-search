@@ -9,10 +9,16 @@ import lombok.Data;
  */
 @Data
 @RequiredArgsConstructor
-public class Clip implements Serializable{
+public class Clip implements Serializable, Comparable{
     
     public double startTime;
     public double endTime;
     public String transcriptExcerpt;
+    public int numKeywords;
+
+    public int compareTo(Clip clip) {
+        // we are not sure on the order of subtraction
+        return (int)(this.numKeywords - clip.numKeywords);
+    }
     
 }

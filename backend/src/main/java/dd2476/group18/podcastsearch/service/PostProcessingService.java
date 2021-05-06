@@ -45,9 +45,19 @@ public class PostProcessingService {
         PostProcessResult currentEpisodeRes = new PostProcessResult();
         currentEpisodeRes = addMetaData(currentEpisodeRes, episodeObj);
         List<Clip> clips = processClip(episodeObj, keywords);
-        currentEpisodeRes.setClips(clips);
-        return currentEpisodeRes;    
-    }
+        Collections.sort(clips);
+        int size = clips.size();
+        if (size > 4) {
+            currentEpisodeRes.setClips(clips.subList(0, 4));
+        } else {
+            currentEpisodeRes.setClips(clips);
+        }
+        for (int i = 0; i < clips.size(); i++) {
+            System.out.println("Clip: "+ 1);
+            System.out.println(clips.get(i).numKeywords);
+        }
+        return currentEpisodeRes;
+    } 
 
     public List<Clip> processClip(EpisodeDocument episode, String s){
         ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(s.split(" ")));
@@ -62,20 +72,24 @@ public class PostProcessingService {
         double start = 0;
         double end = 0;
         double limit = 40;
+        int numKeywords = 0;
+        
         boolean isbuildingTranscript = false;
         // this handles multiword queries
         for (int i = 0; i < tokens.size(); i++) {
             tok = tokens.get(i).getWord();
 
             if(isbuildingTranscript && tokens.get(i).getStartTime()-end > limit){
-                 //create and add clip
-                 Clip newClip = new Clip();
-                 newClip.endTime = tokens.get(i).getEndTime();
-                 newClip.startTime = start;
-                 newClip.transcriptExcerpt = transcriptExc.toString();
-                 clips.add(newClip);
-                 transcriptExc.setLength(0);
-                 isbuildingTranscript = false;                
+                //create and add clip
+                Clip newClip = new Clip();
+                newClip.endTime = tokens.get(i).getEndTime();
+                newClip.startTime = start;
+                newClip.transcriptExcerpt = transcriptExc.toString();
+                newClip.numKeywords = numKeywords;
+                clips.add(newClip);
+                transcriptExc.setLength(0);
+                isbuildingTranscript = false; 
+                numKeywords = 0;               
             } else if (isbuildingTranscript) {
                 transcriptExc.append(tok + " ");
             } 
@@ -88,6 +102,7 @@ public class PostProcessingService {
                     end = tokens.get(i).getEndTime();   
                     transcriptExc.append(tok + " ");
                 }
+                numKeywords ++;
             }
         }
         return clips;
