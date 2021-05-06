@@ -54,7 +54,21 @@ public class EpisodeSearcher {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayList<Episode>();
+
+        List<Episode> episodes = episodeDocuments
+            .stream()
+            .map((MatchedEpisodeDocument doc) -> {
+                Episode episode = episodeRepository.findById(doc.getEpisodeId()).get();
+                episode.setScore(doc.getScore());
+                episode.setClips(new ArrayList<EpisodeClip>());
+                for (HighlightSegment highlightSegment: doc.getHighlightSegments()) {
+                    EpisodeClip clip = episode.buildClipForTerms(highlightSegment, clipLength);
+                    episode.getClips().add(clip);
+                }
+                return episode;
+            })
+            .collect(Collectors.toList());
+        return episodes;
     }
 
     /**

@@ -36,7 +36,7 @@ public class HighlightSegment {
             return this;
         }
 
-        public HighlightSegmentBuilder highlightIndices() {
+          public HighlightSegmentBuilder highlightIndices() {
             this.highlightIndices = IntStream.range(0, this.normalizedTokens.size())
                 .filter(i -> this.normalizedTokens.get(i).contains("<em>"))
                 .boxed()

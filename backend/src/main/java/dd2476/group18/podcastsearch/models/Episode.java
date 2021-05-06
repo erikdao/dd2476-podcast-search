@@ -148,23 +148,24 @@ public class Episode {
         } else {
             log.debug("wordTokens loaded");
         }
-
+        
         /*
-         * Get a list of all tokens in this episode. We remove all the punctuations
-         * from the word for better matching with the `normalizedTerms` below
-         */
+        * Get a list of all tokens in this episode. We remove all the punctuations
+        * from the word for better matching with the `normalizedTerms` below
+        */
         List<String> allTokens = this.wordTokens.stream().map(
             token -> token.getWord().toLowerCase().replaceAll("[\\.,;!\\?]", "")
-        ).collect(Collectors.toList());
+            ).collect(Collectors.toList());
+            
+            // Remove <em></em> in some words in the highlightSegment
+            List<String> normalizedTokens = highlightSegment.getNormalizedTokens()
+            .stream().map(t -> t.replaceAll("</em>", "").replaceAll("<em>", "").trim())
+            .collect(Collectors.toList());
+            
 
-        // Remove <em></em> in some words in the highlightSegment
-        List<String> normalizedTokens = highlightSegment.getNormalizedTokens()
-                    .stream().map(t -> t.replaceAll("</em>", "").replaceAll("<em>", "").trim())
-                    .collect(Collectors.toList());
-
-        // Senitize checking of the first element
-        String firstEl = normalizedTokens.get(0);
-        if (firstEl.length() == 0 || (!Character.isLetterOrDigit(firstEl.charAt(0)) && !firstEl.contains("<em>"))) {
+            // Senitize checking of the first element
+            String firstEl = normalizedTokens.get(0);
+            if (firstEl.length() == 0 || (!Character.isLetterOrDigit(firstEl.charAt(0)) && !firstEl.contains("<em>"))) {
             normalizedTokens.remove(0);
         }
 

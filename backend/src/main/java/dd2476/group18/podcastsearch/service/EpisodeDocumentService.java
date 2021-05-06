@@ -75,6 +75,9 @@ public class EpisodeDocumentService {
         SearchHits hits = response.getHits();
         SearchHit[] searchHits = hits.getHits();
 
+        
+
+
         List<MatchedEpisodeDocument> results = new ArrayList<>();
 
         for (SearchHit hit: searchHits) {
