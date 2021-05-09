@@ -20,9 +20,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonView(View.Minimal.class)
-public class EpisodeClip {
+public class EpisodeClip implements Comparable<EpisodeClip> {
     private Integer order;
     private Double startTime;
     private Double endTime;
     private List<WordToken> wordTokens;
+
+    public int compareTo(EpisodeClip EpisodeClip) {
+        // we are not sure on the order of subtraction
+        return (int)(this.startTime - EpisodeClip.startTime);
+    }
 }
