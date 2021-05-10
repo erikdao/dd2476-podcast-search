@@ -41,6 +41,9 @@ public class EpisodeSearcher {
                 episode.setClips(new ArrayList<EpisodeClip>());
                 for (HighlightSegment highlightSegment: doc.getHighlightSegments()) {
                     EpisodeClip clip = episode.buildClipForTerms(highlightSegment, clipLength);
+                    if(clip.isEmpty()){
+                        continue;
+                    }
                     episode.getClips().add(clip);
                 }
                 return aggregateClips(episode);
@@ -65,6 +68,9 @@ public class EpisodeSearcher {
                 episode.setClips(new ArrayList<EpisodeClip>());
                 for (HighlightSegment highlightSegment: doc.getHighlightSegments()) {
                     EpisodeClip clip = episode.buildClipForTerms(highlightSegment, clipLength);
+                    if(clip.isEmpty()){
+                        continue;
+                    }
                     episode.getClips().add(clip);
                 }
                 return aggregateClips(episode);

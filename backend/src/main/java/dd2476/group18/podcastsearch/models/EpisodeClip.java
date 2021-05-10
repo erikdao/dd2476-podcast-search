@@ -27,7 +27,18 @@ public class EpisodeClip implements Comparable<EpisodeClip> {
     private List<WordToken> wordTokens;
 
     public int compareTo(EpisodeClip EpisodeClip) {
-        // we are not sure on the order of subtraction
+        // System.out.println(this.toString());
+        // System.out.println("comp: " + EpisodeClip.to);
+        if(this.startTime == null || EpisodeClip.startTime == null){
+            return 1;
+        }
         return (int)(this.startTime - EpisodeClip.startTime);
+    }
+
+    public boolean isEmpty(){
+        if(order == null && startTime == null && endTime == null && wordTokens == null){
+            return true;
+        }
+        return false;
     }
 }
