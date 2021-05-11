@@ -11,6 +11,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -26,7 +27,6 @@ import dd2476.group18.podcastsearch.models.EpisodeDocument;
 import dd2476.group18.podcastsearch.repositories.EpisodeDocumentRepository;
 import dd2476.group18.podcastsearch.searchers.HighlightSegment;
 import dd2476.group18.podcastsearch.searchers.MatchedEpisodeDocument;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -109,7 +109,7 @@ public class EpisodeDocumentService {
 
     public List<MatchedEpisodeDocument> multiwordTranscriptSearch(String query, int from, int size) throws IOException {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.matchQuery("transcript", query));
+        sourceBuilder.query(QueryBuilders.matchQuery("transcript", query).operator(Operator.AND));
         sourceBuilder.from(from);
         sourceBuilder.size(size);
         sourceBuilder.fetchSource(includes, excludes);
