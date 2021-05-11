@@ -109,7 +109,7 @@ public class EpisodeDocumentService {
 
     public List<MatchedEpisodeDocument> multiwordTranscriptSearch(String query, int from, int size) throws IOException {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.matchQuery("transcript", query).operator(Operator.AND));
+        sourceBuilder.query(QueryBuilders.matchQuery("transcript", query));
         sourceBuilder.from(from);
         sourceBuilder.size(size);
         sourceBuilder.fetchSource(includes, excludes);
