@@ -9,6 +9,19 @@ Contributors:
 - William Lindblom
 - Xitao Mo
 
+## How to run the application
+### Step 1. Connect to the remote service in shell
+Please open three independent terminal windows and run the following commands respectively:
+```
+ssh -L 5432:localhost:5432 cuong@podcast-server # Connect to the Postgres Database service
+ssh -L 9200:localhost:9200 cuong@podcast-server # Connect to the elastic search service
+ssh -L 5601:localhost:5601 cuong@podcast-server # Connect to the Kibana service
+```
+### Step 2. Build and run 
+Enter the folder: "backend" folder and run the script "run.sh". 
+
+
+
 ## Note
 [04-23-2021] As we have upgraded our codebase to use Java as the main language for the backend and data import, you need to perform the following steps to properly setup your local data.
 - Make sure you've run `docker-compose up -d` successfully
