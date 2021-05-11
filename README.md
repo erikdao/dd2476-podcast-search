@@ -1,4 +1,4 @@
-# Spotify Podcast Search
+# Group 18 - Spotify Podcast Search
 
 Group project for DD2476 - Search Engines and Information Retrieval @ KTH Royal Institute of Technology
 
