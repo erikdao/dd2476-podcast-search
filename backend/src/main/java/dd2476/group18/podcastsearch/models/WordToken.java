@@ -23,7 +23,6 @@ public class WordToken implements Serializable, Comparable<WordToken> {
 
 
     public int compareTo(WordToken compareToken) {
-        // we are not sure on the order of subtraction
         return (int)(this.startTime - compareToken.startTime);
     }
 

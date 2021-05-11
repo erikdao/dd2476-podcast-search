@@ -1,0 +1,1 @@
+This folder contains depricated code for exploratory analysis during thefirst stages of the project. We've now moved everything into the java backend.

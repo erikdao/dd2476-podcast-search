@@ -32,8 +32,7 @@ public class EpisodeController {
         @RequestParam(name = "size", defaultValue = "15") int size,
         @RequestBody EpisodeSearchRequestBody body
     ) {
-        System.out.println("Query type: " + body.getType());
-        //At tis point in time there is only 2 query types (phrase and multiword)
+        //At this point in time there is only 2 query types (phrase and multiword)
         if(body.getType().equals("multiword")){
             return episodeSearcher.multiwordSearchEpisodeByTranscript(body.getQuery(), body.getClipLength(), from, size);
         } else {

@@ -27,8 +27,6 @@ public class EpisodeClip implements Comparable<EpisodeClip> {
     private List<WordToken> wordTokens;
 
     public int compareTo(EpisodeClip EpisodeClip) {
-        // System.out.println(this.toString());
-        // System.out.println("comp: " + EpisodeClip.to);
         if(this.startTime == null || EpisodeClip.startTime == null){
             return 1;
         }
