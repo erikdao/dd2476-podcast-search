@@ -27,12 +27,14 @@ function SearchResultPage() {
   const [from, setFrom] = useState(0);
   const size = 15;
 
-  const handleSearchSubmit = (q: string): void => {
-    if (q.length && q !== query) {
+  const handleSearchSubmit = async (q: string): Promise<void> => {
+    if (q.length) {
         setEpisodes([]);
         setSelectedEpisode(undefined);
         setFrom(0);
         setQuery(q);
+
+        await searchEpisodes();
     }
   }
 
@@ -63,13 +65,17 @@ function SearchResultPage() {
      }
   }
 
+  // useEffect(() => {
+  //   (async function useEffectSearchEpisodes() {
+  //     if (query) {
+  //       await searchEpisodes();
+  //     }
+  //   })();
+  // }, [query]);
+
   useEffect(() => {
-    (async function useEffectSearchEpisodes() {
-      if (query) {
-        await searchEpisodes();
-      }
-    })();
-  }, [query]);
+    console.log('type', type);
+  }, [type]);
 
   return (
     <>

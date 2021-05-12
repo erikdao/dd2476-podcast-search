@@ -18,7 +18,7 @@ export function SearchBox(props: ISearchBoxProps) {
     setQuery(value);
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (props.onSubmit && typeof props.onSubmit === 'function') {
         props.onSubmit(query);
@@ -36,7 +36,8 @@ export function SearchBox(props: ISearchBoxProps) {
         placeholder="Search for podcast by names, transcripts..."
         value={query}
         onChange={handleQueryChanged}
-        onKeyPress={handleKeyDown}
+        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         />
       <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center cursor-pointer">
         <SearchIcon className="h-5 w-5 text-gray-700" aria-hidden="true" />
