@@ -65,13 +65,13 @@ function SearchResultPage() {
      }
   }
 
-  // useEffect(() => {
-  //   (async function useEffectSearchEpisodes() {
-  //     if (query) {
-  //       await searchEpisodes();
-  //     }
-  //   })();
-  // }, [query]);
+  useEffect(() => {
+    (async function useEffectSearchEpisodes() {
+      if (query) {
+        await searchEpisodes();
+      }
+    })();
+  }, [query]);
 
   useEffect(() => {
     console.log('type', type);
